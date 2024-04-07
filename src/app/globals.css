@@ -1,4 +1,61 @@
-:root {
+.error {
+  background-color: red;
+}
+
+body {
+  margin: 0px !important;
+  background-color: #121212;
+}
+
+.ant-tree {
+  width: 200px;
+  background-color: #202f4a;
+  color: #c7c7c7;
+}
+
+.ant-input {
+  width: 440px;
+  border-color: #202f4a;
+  background-color: #202f4a;
+  color: #dddddd;
+  padding: 10px 10px 0px 15px;
+}
+
+.ant-btn-default {
+  border-color: transparent;
+}
+
+.ant-input-outlined:hover {
+  border-color: #242424 !important;
+  background-color: #242424 !important;
+}
+
+.ant-tree.ant-tree-directory .ant-tree-treenode-selected::before {
+  background-color: #273b72 !important;
+}
+
+.monaco-editor {
+  margin: 10px 10px 0px 10px;
+  border: 1px solid#2c4168;
+  border-radius: 10px;
+}
+
+.monaco-editor .overflow-guard {
+  border-radius: 10px;
+}
+
+.text-animation {
+  opacity: 0;
+  animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* :root {
   --max-width: 1100px;
   --border-radius: 12px;
   --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
@@ -104,4 +161,4 @@ a {
   html {
     color-scheme: dark;
   }
-}
+} */
