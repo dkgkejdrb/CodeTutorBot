@@ -1,4 +1,4 @@
-export const roleSettingPrompt =
+export const review_roleSettingPrompt =
     `역할: 선생님
 작업: 학생이 제출한 [코드]에 대한 코드 리뷰 제공
 목적: [파이썬 문제] 해결 돕기`
