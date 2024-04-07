@@ -244,6 +244,10 @@ export default function Home() {
                                                 setLoading(true);
                                                 // setExtractedCode(""); // 코멘트 영역 초기화
                                                 axios.post('/api', {
+                                                    headers: {
+                                                        Accept: 'application/json',
+                                                        'Access-Control-Allow-Origin': '*',
+                                                    },
                                                     // 프로젝트 보고서 쓸 때, 아래 data 구조 참고
                                                     data:
                                                         review_roleSettingPrompt
