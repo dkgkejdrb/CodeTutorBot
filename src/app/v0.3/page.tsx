@@ -8,7 +8,7 @@ import type { GetProps } from 'antd';
 import { Input } from 'antd';
 import { TreeLayout, TreeQuizData } from '../components/quizList';
 import {
-    roleSettingPrompt, reviewNecessityPredictionPrompt,
+    review_roleSettingPrompt, reviewNecessityPredictionPrompt,
     reviewCommentGenerationPrompt_styleTone, reviewCommentGenerationPrompt_instruction,
     reviewCommentGenerationPrompt_restriction, reviewCommentGenerationPrompt_solution,
     reviewCommentGenerationPrompt_example
@@ -92,7 +92,7 @@ export default function Home() {
                                     axios.post('/api', {
                                         // 프로젝트 보고서 쓸 때, 아래 data 구조 참고
                                         data:
-                                            roleSettingPrompt
+                                            review_roleSettingPrompt
                                             + reviewNecessityPredictionPrompt
                                             + reviewCommentGenerationPrompt_styleTone
                                             + reviewCommentGenerationPrompt_instruction
