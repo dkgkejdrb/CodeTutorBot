@@ -16,7 +16,8 @@ export async function POST(request: Request) {
     // console.log(`클라에서 넘어온것: ${_content.data}`);
 
     const openai = new OpenAI({
-        apiKey: KEY, // 키
+        // apiKey: KEY, // 키
+        apiKey: "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"
     });
 
     const response = await openai.chat.completions.create({
