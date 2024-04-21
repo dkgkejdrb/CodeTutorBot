@@ -1,3 +1,4 @@
+// 2024.04.21: 최종 코드 리뷰 코멘트 및 응답 검증
 "use client";
 
 import Editor from "@monaco-editor/react";
@@ -7,6 +8,15 @@ import { Button, Tree, Modal, Spin } from 'antd';
 import type { GetProps } from 'antd';
 import { Input } from 'antd';
 import { TreeLayout, TreeQuizData } from './components/quizList';
+import Image from 'next/image'
+import logo from '@/app/LOGO.png';
+
+// 2024.04.21: 1차 시스템평가 개선 항목
+// 비어있는 코드에 대한 예외 처리 추가 *처리 완료
+// 코드 리뷰 모델에 제약 조건 추가
+// 슬라이싱 로직 점검 및 개선
+// (응답결과 길어짐) 코드 리뷰 코멘트를 간결하게 제공하기 위해 코드 리뷰 모듈 개선
+
 import {
   review_roleSettingPrompt, reviewNecessityPredictionPrompt,
   reviewCommentGenerationPrompt_styleTone, reviewCommentGenerationPrompt_instruction,
@@ -52,6 +62,22 @@ const configError = {
 };
 // .. 모달 관련
 
+// 학생이 제출한 코드 유효성 검사
+function isCodeEmptyOrNonExecutable(code: string) {
+  // 주석과 공백을 제거한 뒤 남은 코드가 있는지 확인
+  const cleanedCode = code
+    .split('\n') // 줄 단위로 분리
+    .filter(line => {
+      const trimmedLine = line.trim();
+      // 라인에서 주석이나 공백이 아닌 내용이 있는지 확인
+      return trimmedLine && !trimmedLine.startsWith('#');
+    })
+    .join('');
+
+  // 남은 내용이 없다면 코드가 비어있거나 동작하지 않는 것으로 간주
+  return cleanedCode.length === 0;
+}
+
 export default function Home() {
   const editorRef = useRef<any>();
 
@@ -71,6 +97,8 @@ export default function Home() {
       const startIndex_result = response.indexOf(startTag_result) + startTag_result.length;
       const endIndex_result = response.indexOf(endTag_result);
       const result = response.substring(startIndex_result, endIndex_result).trim();
+      const isCodeReviewNeeded = response.slice(0, 20).includes('아니오');
+
       if (result == "예") {
         const startTag_code = "[RC]";
         const endTag_code = "[/RC]";
@@ -87,6 +115,9 @@ export default function Home() {
         const startIndex_comment = response.indexOf(startTag_comment) + startTag_comment.length;
         const endIndex_comment = response.indexOf(endTag_comment);
         setExtractedComment(response.substring(startIndex_comment, endIndex_comment).trim());
+      }
+      if (result == "아니오" || isCodeReviewNeeded) {
+        setExtractedComment("잘했어요! 정답 코드를 작성하셨네요. 이제 다음 문제를 도전해보세요. 👍")
       }
     }
   }, [loading])
@@ -115,20 +146,18 @@ export default function Home() {
   const [modal, contextHolder] = Modal.useModal();
   // .. 모달 관련
 
-  // useEffect(() => {
-  //     modal.warning(config);
-  // }, [])
-
-
   return (
-    <main style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+    <main style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
       <>
         <ReachableContext.Provider value="Light">
           {/* `contextHolder` should always be placed under the context you want to access */}
           {contextHolder}
         </ReachableContext.Provider>
       </>
-      <div style={{ marginTop: 50, display: "flex", width: 1140, height: 600 }}>
+      <div style={{ width: "100%", height: 50 }}>
+        {/* <Image width={50} height={50} src={logo} alt="" /> */}
+      </div>
+      <div style={{ display: "flex", width: 1140, height: 600 }}>
         <div className="left" style={{
           borderRadius: "10px 0px 0px 10px",
           // padding: "15px 20px", 
@@ -212,39 +241,46 @@ export default function Home() {
                     :
                     <Button
                       onClick={() => {
-                        _setLoading(true);
-                        axios.post('/pythonApi', {
-                          headers: {
-                            Accept: 'application/json',
-                            'Access-Control-Allow-Origin': '*',
-                          },
-                          data:
-                            answerCheckPrompt
-                            + "\n\n[파이썬 문제]\n" + quiz + "\n[/파이썬 문제]"
-                            + "\n[코드]\n" + editorRef.current.getValue()
-                            + "\n\n[정답코드]" + solution + "\n[/정답코드]"
-                        })
-                          .then(response => {
-                            console.log('응답 데이터', response.data);
-                            _setResponse(response.data.response.choices[0].message.content);
-                            _setLoading(false);
-                            const content = response.data.response.choices[0].message.content;
-                            if (content.includes("정답")) {
-                              modal.success(configSucces);
-                            }
-                            if (content.includes("틀렸습니다")) {
-                              modal.error(configFail);
-                            }
-                            if (content.includes("에러")) {
-                              modal.warning(configError);
-                            }
-                            // 
+                        // 2024.04.21::
+                        const studentCode = editorRef.current.getValue();
+                        if (isCodeEmptyOrNonExecutable(studentCode) === true) {
+                          modal.warning(configError);
+                          // console.log("코드가 비어있습니다.");
+                          return
+                        } if (isCodeEmptyOrNonExecutable(studentCode) === false) {
+                          _setLoading(true);
+                          axios.post('/pythonApi', {
+                            headers: {
+                              Accept: 'application/json',
+                              'Access-Control-Allow-Origin': '*',
+                            },
+                            data:
+                              answerCheckPrompt
+                              + "\n\n[파이썬 문제]\n" + quiz + "\n[/파이썬 문제]"
+                              + "\n[코드]\n" + editorRef.current.getValue()
+                              + "\n\n[정답코드]" + solution + "\n[/정답코드]"
                           })
-                          .catch(error => {
-                            console.error('에러 발생:', error);
-                            _setLoading(false);
-                          });
-                      }}
+                            .then(response => {
+                              _setResponse(response.data.response.choices[0].message.content);
+                              _setLoading(false);
+                              const content = response.data.response.choices[0].message.content;
+                              if (content.includes("정답")) {
+                                modal.success(configSucces);
+                              }
+                              if (content.includes("틀렸습니다")) {
+                                modal.error(configFail);
+                              }
+                              if (content.includes("에러")) {
+                                modal.warning(configError);
+                              }
+                            })
+                            .catch(error => {
+                              console.error('에러 발생:', error);
+                              _setLoading(false);
+                            });
+                        }
+                      }
+                      }
                       style={{ color: "black", width: 306, backgroundColor: "#96effc", fontWeight: "bold" }}
                     >▷ 제출하기</Button>
                 }
@@ -255,36 +291,45 @@ export default function Home() {
                     :
                     <Button
                       onClick={() => {
-                        setLoading(true);
-                        // setExtractedCode(""); // 코멘트 영역 초기화
-                        axios.post('/api', {
-                          headers: {
-                            Accept: 'application/json',
-                            'Access-Control-Allow-Origin': '*',
-                          },
-                          // 프로젝트 보고서 쓸 때, 아래 data 구조 참고
-                          data:
-                            review_roleSettingPrompt
-                            + reviewNecessityPredictionPrompt
-                            + reviewCommentGenerationPrompt_styleTone
-                            + reviewCommentGenerationPrompt_instruction
-                            + reviewCommentGenerationPrompt_restriction
-                            // + reviewCommentGenerationPrompt_exercise
-                            + "\n\n[파이썬 문제]\n" + quiz + "\n[/파이썬 문제]"
-                            + "\n\n[코드]\n" + editorRef.current.getValue() + "\n[/코드]" // reviewCommentGenerationPrompt_code
-                            + "\n\n[정답코드]" + solution + "\n[/정답코드]"
-                            // 프롬프트 예시 추가
-                            + reviewCommentGenerationPrompt_example
-                        })
-                          .then(response => {
-                            console.log('응답 데이터', response.data);
-                            setResponse(response.data.response.choices[0].message.content);
-                            setLoading(false);
-                          })
-                          .catch(error => {
-                            console.error('에러 발생:', error);
-                            setLoading(false);
-                          });
+                        // 2024.04.21::
+                        const studentCode = editorRef.current.getValue();
+                        if (isCodeEmptyOrNonExecutable(studentCode) === true) {
+                          modal.warning(configError);
+                          // console.log("코드가 비어있습니다.");
+                          return
+                        } else {
+                          setLoading(true);
+                          if (isCodeEmptyOrNonExecutable(studentCode) === false) {
+                            axios.post('/api', {
+                              headers: {
+                                Accept: 'application/json',
+                                'Access-Control-Allow-Origin': '*',
+                              },
+                              // 프로젝트 보고서 쓸 때, 아래 data 구조 참고
+                              data:
+                                review_roleSettingPrompt
+                                + reviewNecessityPredictionPrompt
+                                + reviewCommentGenerationPrompt_styleTone
+                                + reviewCommentGenerationPrompt_instruction
+                                + reviewCommentGenerationPrompt_restriction
+                                // + reviewCommentGenerationPrompt_exercise
+                                + "\n\n[파이썬 문제]\n" + quiz + "\n[/파이썬 문제]"
+                                + "\n\n[코드]\n" + studentCode + "\n[/코드]" // reviewCommentGenerationPrompt_code
+                                + "\n\n[정답코드]" + solution + "\n[/정답코드]"
+                                // 프롬프트 예시 추가
+                                + reviewCommentGenerationPrompt_example
+                            })
+                              .then(response => {
+                                console.log('응답 데이터', response.data);
+                                setResponse(response.data.response.choices[0].message.content);
+                                setLoading(false);
+                              })
+                              .catch(error => {
+                                console.error('에러 발생:', error);
+                                setLoading(false);
+                              });
+                          }
+                        }
                       }}
                       style={{ color: "#dddddd", fontWeight: "bold", width: 164, backgroundColor: "#690db0" }}
                     >코드 튜터 도움받기</Button>

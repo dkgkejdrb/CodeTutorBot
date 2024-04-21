@@ -10,10 +10,10 @@ export const reviewCommentGenerationPrompt_styleTone =
     `초등학교 5학년이 이해할 수 있는 어휘 난이도로 리뷰.`
 
 export const reviewCommentGenerationPrompt_instruction =
-    `[응답예시][/응답예시]와 같이 [RNP][/RNP]와 [RC][/RC]와 [R][/R]이 응답에 반드시 포함. [코드]에서 잘못된 코드 라인의 맨 끝에 '수정 필요' 주석 추가. 주석이 추가된 [코드]를 그대로 [RC][/RC]에 응답. 코드 리뷰를 [R][/R]에 응답.`
+    `[응답예시][/응답예시]와 같이 [RNP][/RNP]와 [RC][/RC]와 [R][/R]이 응답에 반드시 포함. [코드]에서 잘못된 코드 라인의 맨 끝에 '수정 필요' 주석 추가. 주석이 추가된 [코드]를 그대로 [RC][/RC]에 응답. 코드 리뷰를 [R][/R]에 반드시 '정중한 톤'으로 응답.`
 
 export const reviewCommentGenerationPrompt_restriction =
-    `단, [RC][/RC]와 [R][/R]에 코드를 직접 수정하거나 수정된 코드를 절대 직접 제시하지 해서는 안됨`
+    `단, [RC][/RC]와 [R][/R]에 코드를 직접 수정하거나 수정된 코드를 절대 직접 제시하지 해서는 안됨.`
 export const reviewCommentGenerationPrompt_solution: any = {
     1173: `print("'코로나 블루'","극복하기",sep=', ',end='!')`,
     1175: `print(input())`,
@@ -23,7 +23,7 @@ export const reviewCommentGenerationPrompt_solution: any = {
     print(a,a+1,a+2,a+3,a+4,sep=' ')`,
     1216: `length=42.195
     print('마라톤의 거리는 %fkm'%length)
-    print('마라톤의 거리는 %0.2fkm'%(length+0.005))`,
+    print('마라톤의 거리는 %0.2fkm'%length)`,
     1221: `x=int(input())
     print("%d" %x)
     print("%.1f" %(x/1000))
@@ -113,8 +113,7 @@ export const reviewCommentGenerationPrompt_solution: any = {
         else:
             print("X", end = ' ')
         n += 1`,
-    1430: `i = -1
-    n = 1
+    1430: `n = 1
     while n<=10:
         print(n*(-1)**(n+1), end = ' ')
         n += 1`,
