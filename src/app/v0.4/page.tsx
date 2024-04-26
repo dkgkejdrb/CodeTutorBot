@@ -13,7 +13,7 @@ import {
     reviewCommentGenerationPrompt_restriction, reviewCommentGenerationPrompt_solution,
     reviewCommentGenerationPrompt_example
 } from '../components/codeFeedbackModule';
-import { answerCheckPrompt } from '../components/answerCheckModule';
+import { answerCheckPrompt } from '../components/oldAnswerCheckModule';
 import { UnorderedListOutlined, BulbOutlined, CodeOutlined, RobotOutlined, LoadingOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 

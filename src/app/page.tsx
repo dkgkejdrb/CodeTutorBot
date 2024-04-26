@@ -8,8 +8,6 @@ import { Button, Tree, Modal, Spin } from 'antd';
 import type { GetProps } from 'antd';
 import { Input } from 'antd';
 import { TreeLayout, TreeQuizData } from './components/quizList';
-import Image from 'next/image'
-import logo from '@/app/LOGO.png';
 
 // 2024.04.21: 1차 시스템평가 개선 항목
 // 비어있는 코드에 대한 예외 처리 추가 *처리 완료
@@ -144,7 +142,26 @@ export default function Home() {
 
   // 모달 관련
   const [modal, contextHolder] = Modal.useModal();
-  // .. 모달 관련
+  // .. 모달 
+
+  // 타이머 모듈
+  const [time, setTime] = useState(0)
+
+  useEffect(() => {
+    let interval: NodeJS.Timer | undefined
+    if (loading) {
+      interval = setInterval(() => {
+        setTime((prevTime) => prevTime + 1)
+      }, 10)
+    } else {
+      clearInterval(interval)
+    }
+
+    return () => clearInterval(interval)
+  }, [loading])
+
+
+  // ... 타이머 모듈
 
   return (
     <main style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
@@ -154,8 +171,8 @@ export default function Home() {
           {contextHolder}
         </ReachableContext.Provider>
       </>
-      <div style={{ width: "100%", height: 50 }}>
-        {/* <Image width={50} height={50} src={logo} alt="" /> */}
+      <div style={{ width: "100%", height: 50, color: "red" }}>
+        {time / 100}
       </div>
       <div style={{ display: "flex", width: 1140, height: 600 }}>
         <div className="left" style={{
