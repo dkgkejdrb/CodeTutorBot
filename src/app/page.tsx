@@ -148,8 +148,8 @@ export default function Home() {
   const [time, setTime] = useState(0)
 
   useEffect(() => {
-    let interval: NodeJS.Timer | undefined
-    if (loading) {
+    let interval: any
+    if (loading || _loading) {
       interval = setInterval(() => {
         setTime((prevTime) => prevTime + 1)
       }, 10)
@@ -158,9 +158,7 @@ export default function Home() {
     }
 
     return () => clearInterval(interval)
-  }, [loading])
-
-
+  }, [loading, _loading])
   // ... 타이머 모듈
 
   return (
@@ -259,6 +257,7 @@ export default function Home() {
                     <Button
                       onClick={() => {
                         // 2024.04.21::
+                        setTime(0)
                         const studentCode = editorRef.current.getValue();
                         if (isCodeEmptyOrNonExecutable(studentCode) === true) {
                           modal.warning(configError);
@@ -309,6 +308,7 @@ export default function Home() {
                     <Button
                       onClick={() => {
                         // 2024.04.21::
+                        setTime(0)
                         const studentCode = editorRef.current.getValue();
                         if (isCodeEmptyOrNonExecutable(studentCode) === true) {
                           modal.warning(configError);

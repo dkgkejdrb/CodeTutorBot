@@ -123,16 +123,36 @@ export default function Home() {
     //     modal.warning(config);
     // }, [])
 
+    // 타이머 모듈
+    const [time, setTime] = useState(0)
+
+    useEffect(() => {
+        let interval: any
+        if (loading || _loading) {
+            interval = setInterval(() => {
+                setTime((prevTime) => prevTime + 1)
+            }, 10)
+        } else {
+            clearInterval(interval)
+        }
+
+        return () => clearInterval(interval)
+    }, [loading, _loading])
+    // ... 타이머 모듈
+
 
     return (
-        <main style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <main style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
             <>
                 <ReachableContext.Provider value="Light">
                     {/* `contextHolder` should always be placed under the context you want to access */}
                     {contextHolder}
                 </ReachableContext.Provider>
             </>
-            <div style={{ marginTop: 50, display: "flex", width: 1140, height: 600 }}>
+            <div style={{ width: "100%", height: 50, color: "red" }}>
+                {time / 100}
+            </div>
+            <div style={{ display: "flex", width: 1140, height: 600 }}>
                 <div className="left" style={{
                     borderRadius: "10px 0px 0px 10px",
                     // padding: "15px 20px", 
@@ -216,6 +236,7 @@ export default function Home() {
                                         :
                                         <Button
                                             onClick={() => {
+                                                setTime(0);
                                                 _setLoading(true);
                                                 axios.post('/pythonApi', {
                                                     headers: {
@@ -259,6 +280,7 @@ export default function Home() {
                                         :
                                         <Button
                                             onClick={() => {
+                                                setTime(0);
                                                 setLoading(true);
                                                 // setExtractedCode(""); // 코멘트 영역 초기화
                                                 axios.post('/api', {
