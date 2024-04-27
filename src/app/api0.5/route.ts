@@ -26,13 +26,13 @@ export async function POST(request: Request) {
         messages: [
             {
                 "role": "user",
-                "content": _content.data
+                "content": _content.data // 학생이 클라에서 넘길 오류코드 + 프롬프트
             }
         ],
-        // 제출하기에서 사용하는 모듈
-        temperature: 0.2, // 변경 전 1
-        max_tokens: 50, // 변경 전 520
-        top_p: 0.8, // 변경 전 1
+        // 코드 튜터 도움받기에서 사용하는 api
+        temperature: 1, // 변경 전 1
+        max_tokens: 480, // 변경 전 480
+        top_p: 1, // 변경 전 1
         frequency_penalty: 0,
         presence_penalty: 0,
     });

@@ -29,9 +29,10 @@ export async function POST(request: Request) {
                 "content": _content.data // 학생이 클라에서 넘길 오류코드 + 프롬프트
             }
         ],
-        temperature: 1,
-        max_tokens: 480,
-        top_p: 1,
+        // 코드 튜터 도움받기에서 사용하는 api
+        temperature: 0.2, // 변경 전 1
+        max_tokens: 320, // 변경 전 480
+        top_p: 0.8, // 변경 전 1
         frequency_penalty: 0,
         presence_penalty: 0,
     });

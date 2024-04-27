@@ -238,7 +238,7 @@ export default function Home() {
                                             onClick={() => {
                                                 setTime(0);
                                                 _setLoading(true);
-                                                axios.post('/pythonApi', {
+                                                axios.post('/pythonApi0.5', {
                                                     headers: {
                                                         Accept: 'application/json',
                                                         'Access-Control-Allow-Origin': '*',
@@ -283,7 +283,7 @@ export default function Home() {
                                                 setTime(0);
                                                 setLoading(true);
                                                 // setExtractedCode(""); // 코멘트 영역 초기화
-                                                axios.post('/api', {
+                                                axios.post('/api0.5', {
                                                     headers: {
                                                         Accept: 'application/json',
                                                         'Access-Control-Allow-Origin': '*',

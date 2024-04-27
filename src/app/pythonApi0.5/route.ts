@@ -30,9 +30,9 @@ export async function POST(request: Request) {
             }
         ],
         // 제출하기에서 사용하는 모듈
-        temperature: 0.2, // 변경 전 1
-        max_tokens: 50, // 변경 전 520
-        top_p: 0.8, // 변경 전 1
+        temperature: 1,
+        max_tokens: 520,
+        top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0,
     });

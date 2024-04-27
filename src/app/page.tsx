@@ -258,10 +258,12 @@ export default function Home() {
                       onClick={() => {
                         // 2024.04.21::
                         setTime(0)
+                        _setLoading(true)
                         const studentCode = editorRef.current.getValue();
                         if (isCodeEmptyOrNonExecutable(studentCode) === true) {
                           modal.warning(configError);
                           // console.log("코드가 비어있습니다.");
+                          _setLoading(false)
                           return
                         } if (isCodeEmptyOrNonExecutable(studentCode) === false) {
                           _setLoading(true);
@@ -309,8 +311,10 @@ export default function Home() {
                       onClick={() => {
                         // 2024.04.21::
                         setTime(0)
+                        // setLoading(true);
                         const studentCode = editorRef.current.getValue();
                         if (isCodeEmptyOrNonExecutable(studentCode) === true) {
+                          // setLoading(false);
                           modal.warning(configError);
                           // console.log("코드가 비어있습니다.");
                           return
