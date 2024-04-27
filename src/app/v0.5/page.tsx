@@ -10,7 +10,6 @@ import { Input } from 'antd';
 import { TreeLayout, TreeQuizData } from '../components/quizList';
 // from './components/quizList';
 
-
 import {
     review_roleSettingPrompt, reviewNecessityPredictionPrompt,
     reviewCommentGenerationPrompt_styleTone, reviewCommentGenerationPrompt_instruction,
@@ -141,6 +140,9 @@ export default function Home() {
     // ... 타이머 모듈
 
 
+    // 토큰 계산 state
+
+    // ... 토큰 계산 state
     return (
         <main style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
             <>
@@ -236,6 +238,12 @@ export default function Home() {
                                         :
                                         <Button
                                             onClick={() => {
+                                                console.log(
+                                                    answerCheckPrompt
+                                                    + "\n\n[파이썬 문제]\n" + quiz + "\n[/파이썬 문제]"
+                                                    + "\n[코드]\n" + editorRef.current.getValue()
+                                                    + "\n\n[정답코드]" + solution + "\n[/정답코드]"
+                                                )
                                                 setTime(0);
                                                 _setLoading(true);
                                                 axios.post('/pythonApi0.5', {
