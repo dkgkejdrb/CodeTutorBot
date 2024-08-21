@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://dkgkejdrb:Vkdnjf8710@cluster0.zjhaf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const uri = process.env.MONGODB_URI;
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -14,6 +14,8 @@ export async function POST(request: Request) {
   const content = await request.json();
   const createdDate = new Date();
   // console.log(_content)
+
+  console.log(uri);
 
   async function run() {
     try {
@@ -32,7 +34,7 @@ export async function POST(request: Request) {
       const result = await collection.insertOne({ ...content, createdDate: createdDate })
       // console.log("저장 완료", result);
 
-      return NextResponse.json({ type: 'success', message: '환영합니다! 회원가입에 성공하셨습니다. 로그인해주세요.', modalOpen: true, result });
+      return NextResponse.json({ type: 'success', message: '환영합니다! 회원가입에 성공하셨습니다. 로그인 창으로 이동합니다.', modalOpen: true, result });
     } catch (err: any) {
       return NextResponse.json({ type: 'error', message: 'error', error: err.message }, { status: 500 });
     } finally {

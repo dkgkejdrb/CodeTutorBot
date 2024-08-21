@@ -60,6 +60,20 @@ main {
   background-color: #242424 !important;
 }
 
+.ant-form .ant-input {
+  width: 100%;
+  border-color: #eee;
+  color: #687074;
+  background-color: white;
+  padding: 5px 10px;
+}
+
+.ant-form .ant-input-outlined:hover {
+  border-color: #eee!important;
+  background-color: white !important;
+}
+
+
 .ant-tree.ant-tree-directory .ant-tree-treenode-selected::before {
   background-color: #273b72 !important;
 }

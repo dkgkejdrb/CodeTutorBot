@@ -38,7 +38,6 @@ textDecorationLine: "none", color: "#7c8082"
 
 export default function Home() {
   return (
-    <main>
       <div className='header'>
         <div className='topBar'>
           <div className='container'>
@@ -64,6 +63,5 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </main>
   );
 }

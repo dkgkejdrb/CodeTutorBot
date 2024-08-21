@@ -1,9 +1,11 @@
 // 2024.08.06: 랜딩 페이지
 "use client";
 
-import './landingPage.css';
 import { Carousel } from 'antd';
 import Header from '../app/components/Header';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
+import { useEffect } from 'react';
 
 const contentStyle = {
   margin: 0,
@@ -14,6 +16,16 @@ const contentStyle = {
 };
 
 export default function Home() {
+  // const isLogin = useSelector((state: RootState) => state.authSlice.isLogin);
+  // const token = useSelector((state: RootState) => state.authSlice.token);
+  const isLogin = useSelector((state: RootState) => state.auth.isLogin);
+  const token = useSelector((state: RootState) => state.auth.token);
+
+  useEffect(()=>{
+    console.log(isLogin);
+    console.log(token);
+  }, [isLogin])
+
   return (
     <main>
       <Header />
