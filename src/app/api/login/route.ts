@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 const jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = process.env.MONGODB_URI;
+// const uri = process.env.MONGODB_URI;
+const uri = "mongodb+srv://dkgkejdrb:Vkdnjf8710@cluster0.zjhaf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 const client = new MongoClient(uri, {
     serverApi: {
@@ -11,7 +12,8 @@ const client = new MongoClient(uri, {
     }
   });
 
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+// const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+const JWT_SECRET_KEY = "Vkdnjf8710";
 
   export async function POST(request: Request) {
     const content = await request.json();
