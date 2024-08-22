@@ -10,6 +10,8 @@ import Alert from '../components/Alert';
 import { resProp } from '../components/Alert';
 import { Form, Input, Select, Button } from 'antd';
 import type { FormProps } from 'antd';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
 
 type FieldType = {
     id: "",
@@ -42,6 +44,7 @@ const labelStyle = {
 export default function Home() {
   const[loading, isLoading] = useState(false);
   const[response, setResponse] = useState<resProp>();
+  const isLogin = useSelector((state: RootState) => state.auth.isLogin);
 
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
       // /api/register로 회원가입 정보 전달
@@ -74,7 +77,7 @@ export default function Home() {
                 <Alert title={'실패😭'} type={'error'} message={response?.message} modalOpen={true} url={''}/>
               )
           }
-          <Header />
+          <Header isLogin={isLogin}/>
           <Breadcrumb items={items} />
 
           <div className='container' style={{ display: "flex", justifyContent: "center", paddingTop: 40 }}>
