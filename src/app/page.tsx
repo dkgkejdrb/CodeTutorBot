@@ -21,14 +21,14 @@ export default function Home() {
   const isLogin = useSelector((state: RootState) => state.auth.isLogin);
   const token = useSelector((state: RootState) => state.auth.token);
 
-  useEffect(()=>{
-    console.log(isLogin);
-    console.log(token);
-  }, [isLogin])
+  // useEffect(()=>{
+  //   console.log(isLogin);
+  //   console.log(token);
+  // }, [isLogin])
 
   return (
     <main>
-      <Header />
+      <Header isLogin={isLogin}/>
       <div className="mainBanner">
         <div className='container'>
         <Carousel arrows infinite={false}>

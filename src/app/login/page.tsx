@@ -9,8 +9,9 @@ import type { FormProps } from 'antd';
 import { resProp } from '../components/Alert';
 import axios from "axios";
 import Alert from '../components/Alert';
-import { useDispatch, UseDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setToken } from '@/store/slices/authSlice'; 
+import { RootState } from '@/store';
 
 const items: ItemType[] = [
     {
@@ -29,6 +30,7 @@ type FieldType = {
 export default function Home() {
     const[loading, isLoading] = useState(false);
     const[response, setResponse] = useState<resProp>();
+    const isLogin = useSelector((state: RootState) => state.auth.isLogin);
 
     const dispatch = useDispatch();
 
@@ -60,14 +62,14 @@ export default function Home() {
             {
                 !loading && response && response.type === 'success' ?
                     (
-                        <Alert title={'🎉회원가입 성공!🎉'} type={'success'} message={response.message} modalOpen={true} url={'/'} />
+                        <Alert title={'🎉어서오세요!🎉'} type={'success'} message={response.message} modalOpen={true} url={'/'} />
                     )
                     : !loading && response && response.type === 'error' &&
                     (
                         <Alert title={'실패😭'} type={'error'} message={response.message} modalOpen={true} url={''} />
                     )
             }
-            <Header />
+            <Header isLogin={isLogin}/>
             <Breadcrumb items={items} />
             
             <div className='container' style={{ display: "flex", justifyContent: "center", paddingTop: 40 }}>
