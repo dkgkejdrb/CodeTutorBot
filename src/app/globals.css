@@ -4,8 +4,38 @@
 
 body {
   margin: 0px !important;
-  background-color: #121212;
+  /* background-color: #121212; */
+  background-color: white;
+  font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans CJK KR', 'Noto Sans KR', '나눔바른고딕', '나눔고딕', '맑은고딕', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol' !important;
 }
+
+main {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .container {
+      width: 750px;
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+      width: 970px;
+  }
+}
+
+
+@media (min-width: 1200px) {
+  .container {
+      width: 1170px;
+  }
+}
+
 
 .ant-tree {
   width: 200px;
@@ -29,6 +59,20 @@ body {
   border-color: #242424 !important;
   background-color: #242424 !important;
 }
+
+.ant-form .ant-input {
+  width: 100%;
+  border-color: #eee;
+  color: #687074;
+  background-color: white;
+  padding: 5px 10px;
+}
+
+.ant-form .ant-input-outlined:hover {
+  border-color: #eee!important;
+  background-color: white !important;
+}
+
 
 .ant-tree.ant-tree-directory .ant-tree-treenode-selected::before {
   background-color: #273b72 !important;

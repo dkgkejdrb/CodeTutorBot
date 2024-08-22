@@ -1,4 +1,4 @@
-// 2024.05.21: 최종 코드 리뷰 코멘트 및 응답 검증
+// 2024.05.26: 영어 논문을 위한 임시 영어 버전
 "use client";
 
 import Editor from "@monaco-editor/react";
@@ -7,7 +7,7 @@ import axios from "axios";
 import { Button, Tree, Modal, Spin } from 'antd';
 import type { GetProps } from 'antd';
 import { Input } from 'antd';
-import { TreeLayout, TreeQuizData } from '../components/quizList';
+import { TreeLayout, TreeQuizData } from '../components/quizList_en';
 import Image from 'next/image'
 import logo from '@/app/LOGO.png';
 
@@ -35,28 +35,28 @@ const { DirectoryTree } = Tree;
 const ReachableContext = createContext<string | null>(null);
 
 const configSucces = {
-    title: '정답',
+    title: 'Correct',
     content: (
         <>
-            훌륭합니다!
+            Great!
         </>
     ),
 };
 
 const configFail = {
-    title: '오답',
+    title: 'Wrong',
     content: (
         <>
-            다시 한번 도전해보세요!
+            Try again!
         </>
     ),
 };
 
 const configError = {
-    title: '오류',
+    title: 'Error',
     content: (
         <>
-            코드를 제출해주세요.
+            Submit your code.
         </>
     ),
 };
@@ -163,7 +163,7 @@ export default function Home() {
                 }}>
                     <div style={{ padding: "10px 25px", borderRadius: "10px 0px 0px 0px", color: "#c7c7c7", backgroundColor: "#314972" }}>
                         <UnorderedListOutlined />
-                        <span style={{ marginLeft: 10 }}>문제 은행</span>
+                        <span style={{ marginLeft: 10 }}>Exercise Bank</span>
                     </div>
                     <div style={{ height: 550, overflowY: "auto", overflowX: "hidden", }}>
                         <DirectoryTree
@@ -180,7 +180,7 @@ export default function Home() {
                     }}>
                     <div style={{ padding: "10px 15px", color: "#c7c7c7", backgroundColor: "#314972" }}>
                         <BulbOutlined />
-                        <span style={{ marginLeft: 10 }}>문제</span>
+                        <span style={{ marginLeft: 10 }}>Exercise</span>
                     </div>
                     <TextArea readOnly={true} variant="borderless" value={quiz} rows={20} style={{ resize: 'none' }} />
                 </div>
@@ -229,7 +229,7 @@ export default function Home() {
                             <div style={{ marginTop: 25, display: "flex", justifyContent: "space-between", padding: "0px 10px 0px 10px" }}>
                                 {
                                     _loading ?
-                                        <Button loading style={{ color: "black", width: 306, backgroundColor: "#96effc", fontWeight: "bold" }}>▷ 제출하기</Button>
+                                        <Button loading style={{ color: "black", width: 306, backgroundColor: "#96effc", fontWeight: "bold" }}>▷ Submit Code</Button>
                                         :
                                         <Button
                                             onClick={() => {
@@ -273,12 +273,12 @@ export default function Home() {
                                             }
                                             }
                                             style={{ color: "black", width: 306, backgroundColor: "#96effc", fontWeight: "bold" }}
-                                        >▷ 제출하기</Button>
+                                        >▷ Submit Code</Button>
                                 }
 
                                 {
                                     loading ?
-                                        <Button loading style={{ color: "#dddddd", fontWeight: "bold", width: 164, backgroundColor: "#690db0" }}>코드튜터 도움받기</Button>
+                                        <Button loading style={{ color: "#dddddd", fontWeight: "bold", width: 164, backgroundColor: "#690db0" }}>Ask Code Tutor</Button>
                                         :
                                         <Button
                                             onClick={() => {
@@ -323,7 +323,7 @@ export default function Home() {
                                                 }
                                             }}
                                             style={{ color: "#dddddd", fontWeight: "bold", width: 164, backgroundColor: "#690db0" }}
-                                        >코드 튜터 도움받기</Button>
+                                        >Ask Code Tutor</Button>
                                 }
 
                             </div>
@@ -333,7 +333,7 @@ export default function Home() {
                     }
                     <div style={{ marginTop: 15, padding: "10px 15px 12px 15px", color: "#c7c7c7", backgroundColor: "#314972" }}>
                         <RobotOutlined />
-                        <span style={{ marginLeft: 10 }}>코드 튜터:</span>
+                        <span style={{ marginLeft: 10 }}>Code Tutor:</span>
                     </div>
                     {
                         isSelect ?

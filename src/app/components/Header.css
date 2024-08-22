@@ -1,0 +1,62 @@
+.header {
+    border-bottom: solid 2px #eee;
+    width: 100%;
+}
+
+.header .topBar {
+    padding: 8px 0;
+}
+
+.container {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.loginBar {
+    font-size: 13px;
+    display: flex;
+    justify-content: right;
+}
+
+.loginBar ul {
+    display: flex;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.loginBar li {
+    display: inline;
+    list-style: none;
+}
+
+.header .topbar-devider {
+    top: 1px;
+    padding: 0;
+    font-size: 8px;
+    position: relative;
+    margin: 0 9px 0 9px;
+    font-family: Tahoma;
+    border-right: solid 1px #bbb;
+    
+}
+
+.header .brand {
+    position: relative;
+}
+
+.navBar .container ul {
+    border-bottom: none;
+    margin-left: 300px;
+}
+
+.navBar li {
+    min-width: 150px;
+    text-align: center;
+}
+
+.navBar .ant-menu-title-content {
+    color: #687074;
+    font-size: 14px;
+}
