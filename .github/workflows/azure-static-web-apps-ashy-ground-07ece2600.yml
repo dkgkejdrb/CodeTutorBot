@@ -38,7 +38,8 @@ jobs:
           api_location: "" # Api source code path - optional
           output_location: "public" # Built app content directory - optional
         env: # Add environment variables here
-          IS_STATIC_EXPORT: true
+          MONGODB_URI: "mongodb+srv://dkgkejdrb:Vkdnjf8710@cluster0.zjhaf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+          JWT_SECRET_KEY: "Vkdnjf8710"
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
