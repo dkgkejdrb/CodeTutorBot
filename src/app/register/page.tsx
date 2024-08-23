@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 
 type FieldType = {
-    id: "",
+    user_id: "",
     password_1: "",
     password_2: "",
     question: "teacherName",
@@ -83,7 +83,7 @@ export default function Home() {
           <div className='container' style={{ display: "flex", justifyContent: "center", paddingTop: 40 }}>
             <Form
                 initialValues={{
-                    id: "",
+                    user_id: "",
                     password_1: "",
                     password_2: "",
                     question: "teacherName",
@@ -95,7 +95,7 @@ export default function Home() {
             >
                 <div>아이디</div>
                 <Form.Item<FieldType>
-                    name="id"
+                    name="user_id"
                     rules={[{ required: true, message: '비어있습니다.' }]}
                 >
                     <Input></Input>

@@ -15,8 +15,10 @@ const navItems = [
     key: 'exercise',
     children: [
       {
-        label: '전체 문제',
-        key: 'exerciseTotal'
+        label: <Link href="/problems">전체 문제</Link>,
+        key: 'exerciseTotal',
+        
+        
       },
       {
         label: '단계별로 풀기',

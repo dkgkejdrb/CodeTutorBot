@@ -17,17 +17,17 @@ const JWT_SECRET_KEY = "Vkdnjf8710";
 
   export async function POST(request: Request) {
     const content = await request.json();
-    // console.log(content)
+    console.log(content)
   
     async function run() {
       try {
         await client.connect();
   
-        const db = client.db("user");
+        const db = client.db("codeTutor");
         const collection = db.collection("users");
   
         // content.id와 content.password_1이 coolection에 있는 id와 
-        const user = await collection.findOne({ id: content.id });
+        const user = await collection.findOne({ user_id: content.user_id });
 
         if (!user) {
           return NextResponse.json({ type: 'error', message: '아이디에 해당하는 유저가 없습니다.' });
