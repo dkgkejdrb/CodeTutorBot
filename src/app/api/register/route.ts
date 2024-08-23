@@ -16,18 +16,18 @@ export async function POST(request: Request) {
   const createdDate = new Date();
   // console.log(_content)
 
-  console.log(uri);
+  // console.log(uri);
 
   async function run() {
     try {
       await client.connect();
 
-      const db = client.db("user");
+      const db = client.db("codeTutor");
       const collection = db.collection("users");
 
       // data.id로 collection에서 해당 id가 있는지 확인
       // console.log({ id: _content.id })
-      const existingUser = await collection.findOne({ id: content.id });
+      const existingUser = await collection.findOne({ user_id: content.user_id });
       // console.log(existingUser);
       if (existingUser) {
         return NextResponse.json({ type: 'error', message: '이미 등록된 아이디입니다. 다른 아이디를 입력해주세요.' });

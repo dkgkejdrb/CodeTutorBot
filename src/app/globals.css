@@ -68,6 +68,19 @@ main {
   padding: 5px 10px;
 }
 
+.problems .ant-input {
+  width: 100%;
+  border-color: #eee;
+  color: #687074;
+  background-color: white;
+  padding: 5px 10px;
+}
+
+.problems .ant-input {
+  border-color: #eee!important;
+  background-color: white !important;
+}
+
 .ant-form .ant-input-outlined:hover {
   border-color: #eee!important;
   background-color: white !important;

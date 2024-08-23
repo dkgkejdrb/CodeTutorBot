@@ -6,6 +6,7 @@ import Header from '../app/components/Header';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { useEffect } from 'react';
+import Image from 'next/image';
 
 const contentStyle = {
   margin: 0,
@@ -26,32 +27,17 @@ export default function Home() {
   //   console.log(token);
   // }, [isLogin])
 
-  // next 내 ssr 송수신 체크, 이게 정상이면 mongo db 문제
-  useEffect(()=>{
-    fetch('./api/test')
-    .then((res) => res.json())
-    .then((data) => {
-    console.log(data.message);
-    });
-  },[])
-
   return (
     <main>
       <Header isLogin={isLogin}/>
       <div className="mainBanner">
         <div className='container'>
-        <Carousel arrows infinite={false}>
+        <Carousel arrows infinite={true} autoplay>
         <div>
-          <h3 style={contentStyle}>1</h3>
+          <Image width={1170} height={488} src={"https://codetutorbot.blob.core.windows.net/image/testBanner.jpg"} unoptimized={true} alt="" />
         </div>
         <div>
-          <h3 style={contentStyle}>2</h3>
-        </div>
-        <div>
-          <h3 style={contentStyle}>3</h3>
-        </div>
-        <div>
-          <h3 style={contentStyle}>4</h3>
+          <Image width={1170} height={488} src={"https://codetutorbot.blob.core.windows.net/image/testBanner.jpg"} unoptimized={true} alt="" />
         </div>
       </Carousel>
     </div>
