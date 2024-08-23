@@ -78,7 +78,7 @@ const columns: TableProps<DataType>['columns'] = [
 export default function Home() {
   const isLogin = useSelector((state: RootState) => state.auth.isLogin);
   const [page, setPage] = useState(1);
-  const pageSize = 2;
+  const pageSize = 20;
   const [response, setResponse] = useState<DataType[]>();
   const [loading, setLoading] = useState(false);
 
