@@ -26,6 +26,15 @@ export default function Home() {
   //   console.log(token);
   // }, [isLogin])
 
+  // next 내 ssr 송수신 체크, 이게 정상이면 mongo db 문제
+  useEffect(()=>{
+    fetch('./api/test')
+    .then((res) => res.json())
+    .then((data) => {
+    console.log(data.message);
+    });
+  },[])
+
   return (
     <main>
       <Header isLogin={isLogin}/>
