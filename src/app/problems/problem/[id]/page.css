@@ -1,0 +1,23 @@
+@media (min-width: 768px) {
+    .problemPage .container {
+        width: 750px;
+    }
+  }
+  
+  @media (min-width: 992px) {
+    .problemPage .container {
+        width: 970px;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .problemPage .container {
+        width: 1170px;
+    }
+  }
+
+  @media (min-width: 1920px) {
+    .problemPage .container {
+        width: 1900px;
+    }
+  }

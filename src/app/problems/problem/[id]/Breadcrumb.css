@@ -1,0 +1,7 @@
+.breadcrumbWrapper .ant-breadcrumb a {
+    color: white;
+}
+
+.breadcrumbWrapper .ant-breadcrumb .ant-breadcrumb-separator {
+    color: white;
+}
