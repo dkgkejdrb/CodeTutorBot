@@ -12,24 +12,17 @@ import { ItemType } from '@/app/components/Breadcrumb';
 import Breadcrumb from '@/app/components/Breadcrumb';
 import { useState, useEffect } from 'react';
 import axios from "axios";
-import Image from 'next/image';
-
-const contentStyle = {
-  margin: 0,
-  height: '160px',
-  color: '#fff',
-  lineHeight: '160px',
-  background: '#364d79',
-};
+import { useRouter } from 'next/navigation';
+const { Column, ColumnGroup } = Table;
 
 const { Option } = Select;
 
 const items: ItemType[] = [
   {
-      href: '/problems',
-      title: (<>
-          전체 문제
-      </>)
+    href: '/problems',
+    title: (<>
+      전체 문제
+    </>)
   }
 ]
 
@@ -53,7 +46,8 @@ const columns: TableProps<DataType>['columns'] = [
     title: '제목',
     dataIndex: 'title',
     key: 'title',
-    width: "50%"
+    width: "50%",
+    render: (text) => <a>{text}</a>
   },
   {
     title: '난이도',
@@ -75,12 +69,15 @@ const columns: TableProps<DataType>['columns'] = [
   },
 ]
 
+
+
 export default function Home() {
   const isLogin = useSelector((state: RootState) => state.auth.isLogin);
   const [page, setPage] = useState(1);
   const pageSize = 20;
   const [response, setResponse] = useState<DataType[]>();
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const onChange: PaginationProps['onChange'] = (current) => {
     setLoading(true);
@@ -93,15 +90,6 @@ export default function Home() {
       .then(response => {
         setLoading(false);
         const data = response.data.data;
-        // console.log(response.data.data);
-        // setResponse({
-        //   key: data._id,
-        //   isCorrect: data.isCorrect,
-        //   title: data.title,
-        //   difficulty: data.difficulty,
-        //   totalSubmissions: data.totalSubmissions,
-        //   accuracyRate: data.accuracyRate
-        // });
 
         const updatedResponse = data.map((_data: any) => ({
           key: _data._id,
@@ -151,14 +139,25 @@ export default function Home() {
         </div>
       </div>
       <div className='problems container' style={{ paddingTop: 24 }}>
-        {
-          !loading ?
-            <Table columns={columns} dataSource={response} />
-          :
-            <Table columns={columns} />
-        }
+        <Table dataSource={response} loading={!response}>
+          <Column title="상태" dataIndex="isCorrect" key="isCorrect" width="10%" />
+          <Column title="제목" dataIndex="title" key="title" width="50%" 
+            render={(text)=>(<a>{text}</a>)}
+            onCell={(record: any, index) => {
+              return {
+                onClick: () => {
+                  // router.push(`/problem/${record.key}`)
+                  router.push(`/problems/problem/${record.key}`)
+                }
+              }
+            }}
+          />
+          <Column title="난이도" dataIndex="difficulty" key="difficulty" width="20%" />
+          <Column title="완료한 사람" dataIndex="totalSubmissions" key="totalSubmissions" width="10%" />
+          <Column title="정답률" dataIndex="accuracyRate" key="accuracyRate" width="10%" />
+        </Table>
       </div>
-      <Pagination defaultCurrent={1} current={page} onChange={onChange} total={pageSize} />
+      <Pagination onChange={onChange} total={pageSize} />
     </main>
   );
 }
