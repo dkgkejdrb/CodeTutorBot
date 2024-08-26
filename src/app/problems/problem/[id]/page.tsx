@@ -83,7 +83,7 @@ export default function Home({ params }: Props) {
                         <div className='container_'>
                             <div className='_container'>
                                 {/* {params.id} */}
-                                <div className='left'>
+                                <div className='left' style={{ overflow: "auto" }}>
                                     {
                                         problemDetail.description &&
                                         <div className='__container'>
