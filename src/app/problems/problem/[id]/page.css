@@ -12,12 +12,35 @@
   
   @media (min-width: 1200px) {
     .problemPage .container {
-        width: 1170px;
+        width: 1180px;
     }
   }
 
   @media (min-width: 1920px) {
     .problemPage .container {
-        width: 1900px;
+        width: 1820px;
     }
   }
+
+.problemPage .container {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.problemPage .container .__container {
+  display: flex;
+  flex-direction: column;
+  border-bottom: solid 2px #eee;
+}
+
+.problemPage .container .__container .title {
+  font-weight: 700;
+  color: #263747
+}
+
+.problemPage .container .__container p{
+  line-height: 1.8;
+  word-wrap: break-word;
+}
