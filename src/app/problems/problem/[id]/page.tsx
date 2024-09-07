@@ -9,6 +9,8 @@ import axios from "axios";
 import { RobotOutlined } from '@ant-design/icons';
 import { Button } from "antd";
 
+import { PythonShell } from 'python-shell';
+
 type Props = {
     params: {
         id: string;
@@ -69,9 +71,9 @@ export default function Home({ params }: Props) {
             });
     }, [])
 
-    useEffect(() => {
-        console.log(problemDetail);
-    }, [problemDetail])
+    // useEffect(() => {
+    //     console.log(problemDetail);
+    // }, [problemDetail])
 
 
     return (
@@ -120,7 +122,7 @@ export default function Home({ params }: Props) {
                                     }
                                 </div>
                                 <div className='right'>
-                                    <div className='__container' style={{marginLeft: 12 }}>
+                                    <div className='__container' style={{ marginLeft: 12 }}>
                                         <div className='title' style={{ paddingBottom: 12 }}>당신의 코드</div>
                                     </div>
                                     <div className="editorWrapper">
@@ -136,7 +138,7 @@ export default function Home({ params }: Props) {
                                                 // readOnly: true
                                             }}
                                         />
-                                    </div> 
+                                    </div>
                                     <div style={{ paddingLeft: 12, backgroundColor: "#FBFBFD", display: "flex", justifyContent: "space-between", width: "100%", height: "calc(45% - 52px)" }}>
                                         <div style={{ borderTop: "solid 2px #eee", width: "100%", display: "flex" }}>
                                             <div style={{ display: "flex", width: "calc(50% - 6px)", height: "100%" }}>
