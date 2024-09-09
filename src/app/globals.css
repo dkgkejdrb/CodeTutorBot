@@ -43,22 +43,22 @@ main {
   color: #c7c7c7;
 }
 
-.ant-input {
+/* .ant-input {
   width: 440px;
   border-color: #202f4a;
   background-color: #202f4a;
   color: #dddddd;
   padding: 10px 10px 0px 15px;
-}
+} */
 
 .ant-btn-default {
   border-color: transparent;
 }
 
-.ant-input-outlined:hover {
+/* .ant-input-outlined:hover {
   border-color: #242424 !important;
   background-color: #242424 !important;
-}
+} */
 
 .ant-form .ant-input {
   width: 100%;

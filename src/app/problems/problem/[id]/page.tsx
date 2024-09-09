@@ -7,9 +7,9 @@ import { ItemType } from '@/app/components/Breadcrumb';
 import { useEffect, useState } from 'react';
 import axios from "axios";
 import { RobotOutlined } from '@ant-design/icons';
-import { Button } from "antd";
+import { Button, Input } from "antd";
 
-import { PythonShell } from 'python-shell';
+const {TextArea} = Input;
 
 type Props = {
     params: {
@@ -75,6 +75,36 @@ export default function Home({ params }: Props) {
     //     console.log(problemDetail);
     // }, [problemDetail])
 
+    const [code, setCode] = useState<string | undefined>("");
+    const [resFromShell, setResFromShell] = useState<string[] | string>([]);
+    // useEffect(()=>{
+    //     console.log(code);
+    // },[code])
+
+    const submitCode = () => {
+        isLoading(true);
+        axios.post('/api/runPython', { code: code })
+        .then(response => {
+            isLoading(false);
+            // setResFromShell(response.data);
+            const compiledCode = response.data.messages;
+            // if (compiledCode.length > 2) {
+            //     const result = compiledCode.map((item: string, index: number) => index < compiledCode.length - 1 ? item + "\n" : item).join('');
+            //     setResFromShell(result);
+            // }
+            if (Array.isArray(compiledCode)) {
+                const result = compiledCode.map((item: string, index: number) => index < compiledCode.length - 1 ? item + "\n" : item).join('');
+                setResFromShell(result);
+            } else {
+                setResFromShell(compiledCode);
+            }
+            console.log(compiledCode.length);
+        })
+        .catch(error => {
+            isLoading(false);
+            console.error('에러 발생:', error);
+        });
+    }
 
 
     return (
@@ -132,12 +162,13 @@ export default function Home({ params }: Props) {
                                             height="100%"
                                             language="python"
                                             defaultValue="# 코드를 제출해주세요."
-                                            // value={extractedCode}
+                                            value={code}
                                             // onMount={hadleEditorDidMount}
                                             options={{
                                                 minimap: { enabled: false },
                                                 // readOnly: true
                                             }}
+                                            onChange={(e)=>{setCode(e);}}
                                         />
                                     </div>
                                     <div style={{ paddingLeft: 12, backgroundColor: "#FBFBFD", display: "flex", justifyContent: "space-between", width: "100%", height: "calc(45% - 52px)" }}>
@@ -146,7 +177,12 @@ export default function Home({ params }: Props) {
                                                 <div style={{ width: "100%", height: "100%", paddingTop: 12 }}>
                                                     <div className='title' style={{ paddingBottom: 12, borderBottom: "solid 2px #eee" }}>실행 결과</div>
                                                     <div style={{ paddingTop: 12, height: "calc(100% - 12px - 32px - 12px)", fontSize: 14 }}>
+                                                        
                                                         # 실행 결과가 여기에 표시됩니다.
+                                                        <TextArea
+                                                            value={resFromShell}
+                                                            readOnly
+                                                            />
                                                     </div>
                                                 </div>
                                             </div>
@@ -174,7 +210,7 @@ export default function Home({ params }: Props) {
                                 <Button style={{ backgroundColor: "#D7E2EB", fontWeight: 700 }}>초기화</Button>
                                 <Button style={{ marginLeft: 6, backgroundColor: "#D7E2EB", fontWeight: 700 }}>코드 실행</Button>
                                 <Button
-                                    onClick={ }
+                                    onClick={submitCode}
                                     type="primary" style={{ marginLeft: 6, fontWeight: 700 }}>제출 후 채점</Button>
                                 <Button type="primary" style={{ marginLeft: 6, fontWeight: 700 }}>코드 튜터에게 물어보기</Button>
                             </div>

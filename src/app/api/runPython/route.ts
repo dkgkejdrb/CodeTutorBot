@@ -12,7 +12,6 @@ interface messages {
     script: string,
     args: null,
     exitCode: number,
-    logs: []
 }
 
 const client = new MongoClient(uri, {
@@ -25,27 +24,11 @@ const client = new MongoClient(uri, {
 
 export async function POST(request: Request) {
     const content = await request.json();
-    // console.log(content);
 
-    // run some simple code
-    PythonShell.runString('x=1;printc(x)').then((messages: any) => {
-        // script finished
-        console.log(messages.traceback);
-    });
-
-    // async function run() {
-    //     try {
-
-    //         return NextResponse.json({ type: 'success', message: '환영합니다! 회원가입에 성공하셨습니다. 로그인 창으로 이동합니다.', modalOpen: true, result });
-    //     } catch (err: any) {
-    //         return NextResponse.json({ type: 'error', message: 'error', error: err.message }, { status: 500 });
-    //     } finally {
-    //         // Ensures that the client will close when you finish/error
-    //         await client.close();
-    //     }
-    // }
-
-
-    // // `await`를 사용하여 `run` 함수의 반환 값을 기다립니다.
-    // return await run()
+    try {
+        const messages = await PythonShell.runString(content.code);
+        return NextResponse.json({ type: 'success', messages });
+    } catch (err: any) {
+        return NextResponse.json({ type: 'error', messages: 'Python script execution failed', error: err.message });
+    }
 }
