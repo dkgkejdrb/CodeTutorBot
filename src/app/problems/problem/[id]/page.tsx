@@ -76,6 +76,7 @@ export default function Home({ params }: Props) {
     // }, [problemDetail])
 
 
+
     return (
         <div className='problemPage'>
             {
@@ -172,7 +173,9 @@ export default function Home({ params }: Props) {
                             <div style={{ display: "flex", justifyContent: "flex-end" }}>
                                 <Button style={{ backgroundColor: "#D7E2EB", fontWeight: 700 }}>초기화</Button>
                                 <Button style={{ marginLeft: 6, backgroundColor: "#D7E2EB", fontWeight: 700 }}>코드 실행</Button>
-                                <Button type="primary" style={{ marginLeft: 6, fontWeight: 700 }}>제출 후 채점</Button>
+                                <Button
+                                    onClick={ }
+                                    type="primary" style={{ marginLeft: 6, fontWeight: 700 }}>제출 후 채점</Button>
                                 <Button type="primary" style={{ marginLeft: 6, fontWeight: 700 }}>코드 튜터에게 물어보기</Button>
                             </div>
                         </div>
