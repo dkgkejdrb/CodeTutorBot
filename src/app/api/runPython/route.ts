@@ -16,13 +16,13 @@ const client = new MongoClient(uri, {
 });
 
 const options: Options = {
+    mode: 'text',
     scriptPath: './src/app/scripts/',
     pythonOptions: ['-u'],
     args: ['value1', 'value2']
 }
 
 export async function POST(request: Request) {
-
     const scriptPath = path.join(options.scriptPath, 'test.py');
     const newContent = await request.json();
 
@@ -31,18 +31,23 @@ export async function POST(request: Request) {
 
     return new Promise((resolve, reject) => {
         let shell = new PythonShell('test.py', options);
-        // shell.send(2);
+        let messagesArray:string[] = [];
 
-        shell.on('message', function (messages) {
-            resolve(NextResponse.json({ type: 'success', messages: messages }));
+        // Store all messages
+        shell.on('message', message => {
+            messagesArray.push(message);
         });
 
+        shell.on('pythonError', error => {
+            resolve(NextResponse.json({ type: 'syntaxError', messages: error.traceback }));
+        });
 
-        shell.end(function (err, code, signal) {
-            if (err) throw err;
-            console.log('The exit code was: ' + code);
-            console.log('The exit signal was: ' + signal);
-            console.log('finished');
+        shell.end((err) => {
+            if (err) {
+                reject(NextResponse.json({ type: 'error', messages: err }));
+            } else {
+                resolve(NextResponse.json({ type: 'success', messages: messagesArray }));
+            }
         });
     });
 }

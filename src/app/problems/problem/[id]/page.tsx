@@ -86,17 +86,22 @@ export default function Home({ params }: Props) {
         axios.post('/api/runPython', { code: code })
             .then(response => {
                 isLoading(false);
-                // setResFromShell(response.data);
-                const compiledCode = response.data.messages;
-                // if (compiledCode.length > 2) {
-                //     const result = compiledCode.map((item: string, index: number) => index < compiledCode.length - 1 ? item + "\n" : item).join('');
-                //     setResFromShell(result);
-                // }
-                if (Array.isArray(compiledCode)) {
-                    const result = compiledCode.map((item: string, index: number) => index < compiledCode.length - 1 ? item + "\n" : item).join('');
-                    setResFromShell(result);
-                } else {
-                    setResFromShell(compiledCode);
+                const responseType = response.data.type;
+                const responseMessage = response.data.messages;
+
+                if (responseType === 'syntaxError') {
+                    if(!responseMessage) {
+                        setResFromShell("실행할 수 없어요. 코드를 확인해 주세요. 😅");
+                    } else {
+                        setResFromShell(responseMessage);
+                    }
+                }
+                else {
+                    if (Array.isArray(responseMessage)) {
+                        // 코드를 정상적으로 실행한 경우
+                        const result = responseMessage.map((item: string, index: number) => index < compiledCode.length - 1 ? item + "\n" : item).join('');
+                        setResFromShell(result);
+                    } 
                 }
             })
             .catch(error => {
