@@ -23,7 +23,7 @@ const options: Options = {
 }
 
 export async function POST(request: Request): Promise<Response> {
-    const scriptPath = path.join(options.scriptPath, 'test.py');
+    const scriptPath = path.join(options.scriptPath!, 'test.py'); // '!'를 사용하여 undefined가 아님을 단언
     const newContent = await request.json();
 
     // Step 1: Modify the content of test.py
