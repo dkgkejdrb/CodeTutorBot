@@ -2,7 +2,8 @@
   background-color: red;
 }
 
-html, body {
+html,
+body {
   margin: 0px !important;
   /* background-color: #121212; */
   background-color: white;
@@ -20,19 +21,19 @@ main {
 
 @media (min-width: 768px) {
   .container {
-      width: 750px;
+    width: 750px;
   }
 }
 
 @media (min-width: 992px) {
   .container {
-      width: 970px;
+    width: 970px;
   }
 }
 
 @media (min-width: 1200px) {
   .container {
-      width: 1170px;
+    width: 1170px;
   }
 }
 
@@ -77,12 +78,12 @@ main {
 }
 
 .problems .ant-input {
-  border-color: #eee!important;
+  border-color: #eee !important;
   background-color: white !important;
 }
 
 .ant-form .ant-input-outlined:hover {
-  border-color: #eee!important;
+  border-color: #eee !important;
   background-color: white !important;
 }
 
@@ -110,6 +111,23 @@ main {
   to {
     opacity: 1;
   }
+}
+
+:where(.resFromShell .css-dev-only-do-not-override-1uweeqc).ant-input-outlined:hover {
+  background-color: transparent;
+  border: none;
+}
+
+:where(.resFromShell .css-dev-only-do-not-override-1uweeqc).ant-input-outlined {
+  background: transparent;
+  border: none;
+}
+
+.resFromShell .ant-input {
+  background-color: transparent;
+  border: none;
+  border-radius: 0px;
+  box-shadow: none;
 }
 
 /* :root {

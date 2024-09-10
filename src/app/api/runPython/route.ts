@@ -1,18 +1,11 @@
 import { PythonShell } from 'python-shell';
-// let pyshell = new PythonShell('@/pyshell/my_script.py');
-
 import { NextResponse } from 'next/server';
+import { Options } from 'python-shell';
+import fs from 'fs';
+import path from 'path';
 const { MongoClient, ServerApiVersion } = require('mongodb');
-// const uri = process.env.MONGODB_URI;
-const uri = "mongodb+srv://dkgkejdrb:Vkdnjf8710@cluster0.zjhaf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
-interface messages {
-    traceback: string,
-    executable: string,
-    script: string,
-    args: null,
-    exitCode: number,
-}
+const uri = "mongodb+srv://dkgkejdrb:Vkdnjf8710@cluster0.zjhaf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 const client = new MongoClient(uri, {
     serverApi: {
@@ -22,13 +15,34 @@ const client = new MongoClient(uri, {
     }
 });
 
-export async function POST(request: Request) {
-    const content = await request.json();
+const options: Options = {
+    scriptPath: './src/app/scripts/',
+    pythonOptions: ['-u'],
+    args: ['value1', 'value2']
+}
 
-    try {
-        const messages = await PythonShell.runString(content.code);
-        return NextResponse.json({ type: 'success', messages });
-    } catch (err: any) {
-        return NextResponse.json({ type: 'error', messages: 'Python script execution failed', error: err.message });
-    }
+export async function POST(request: Request) {
+
+    const scriptPath = path.join(options.scriptPath, 'test.py');
+    const newContent = await request.json();
+
+    // Step 1: Modify the content of test.py
+    fs.writeFileSync(scriptPath, newContent.code, 'utf8');
+
+    return new Promise((resolve, reject) => {
+        let shell = new PythonShell('test.py', options);
+        // shell.send(2);
+
+        shell.on('message', function (messages) {
+            resolve(NextResponse.json({ type: 'success', messages: messages }));
+        });
+
+
+        shell.end(function (err, code, signal) {
+            if (err) throw err;
+            console.log('The exit code was: ' + code);
+            console.log('The exit signal was: ' + signal);
+            console.log('finished');
+        });
+    });
 }

@@ -9,7 +9,7 @@ import axios from "axios";
 import { RobotOutlined } from '@ant-design/icons';
 import { Button, Input } from "antd";
 
-const {TextArea} = Input;
+const { TextArea } = Input;
 
 type Props = {
     params: {
@@ -76,7 +76,7 @@ export default function Home({ params }: Props) {
     // }, [problemDetail])
 
     const [code, setCode] = useState<string | undefined>("");
-    const [resFromShell, setResFromShell] = useState<string[] | string>([]);
+    const [resFromShell, setResFromShell] = useState<string[] | string>(["# 실행 결과가 여기에 표시됩니다."]);
     // useEffect(()=>{
     //     console.log(code);
     // },[code])
@@ -84,26 +84,25 @@ export default function Home({ params }: Props) {
     const submitCode = () => {
         isLoading(true);
         axios.post('/api/runPython', { code: code })
-        .then(response => {
-            isLoading(false);
-            // setResFromShell(response.data);
-            const compiledCode = response.data.messages;
-            // if (compiledCode.length > 2) {
-            //     const result = compiledCode.map((item: string, index: number) => index < compiledCode.length - 1 ? item + "\n" : item).join('');
-            //     setResFromShell(result);
-            // }
-            if (Array.isArray(compiledCode)) {
-                const result = compiledCode.map((item: string, index: number) => index < compiledCode.length - 1 ? item + "\n" : item).join('');
-                setResFromShell(result);
-            } else {
-                setResFromShell(compiledCode);
-            }
-            console.log(compiledCode.length);
-        })
-        .catch(error => {
-            isLoading(false);
-            console.error('에러 발생:', error);
-        });
+            .then(response => {
+                isLoading(false);
+                // setResFromShell(response.data);
+                const compiledCode = response.data.messages;
+                // if (compiledCode.length > 2) {
+                //     const result = compiledCode.map((item: string, index: number) => index < compiledCode.length - 1 ? item + "\n" : item).join('');
+                //     setResFromShell(result);
+                // }
+                if (Array.isArray(compiledCode)) {
+                    const result = compiledCode.map((item: string, index: number) => index < compiledCode.length - 1 ? item + "\n" : item).join('');
+                    setResFromShell(result);
+                } else {
+                    setResFromShell(compiledCode);
+                }
+            })
+            .catch(error => {
+                isLoading(false);
+                console.error('에러 발생:', error);
+            });
     }
 
 
@@ -168,7 +167,7 @@ export default function Home({ params }: Props) {
                                                 minimap: { enabled: false },
                                                 // readOnly: true
                                             }}
-                                            onChange={(e)=>{setCode(e);}}
+                                            onChange={(e) => { setCode(e); }}
                                         />
                                     </div>
                                     <div style={{ paddingLeft: 12, backgroundColor: "#FBFBFD", display: "flex", justifyContent: "space-between", width: "100%", height: "calc(45% - 52px)" }}>
@@ -176,13 +175,13 @@ export default function Home({ params }: Props) {
                                             <div style={{ display: "flex", width: "calc(50% - 6px)", height: "100%" }}>
                                                 <div style={{ width: "100%", height: "100%", paddingTop: 12 }}>
                                                     <div className='title' style={{ paddingBottom: 12, borderBottom: "solid 2px #eee" }}>실행 결과</div>
-                                                    <div style={{ paddingTop: 12, height: "calc(100% - 12px - 32px - 12px)", fontSize: 14 }}>
-                                                        
-                                                        # 실행 결과가 여기에 표시됩니다.
+                                                    <div className='resFromShell' style={{ paddingTop: 12, height: "calc(100% - 12px - 32px - 12px)", fontSize: 14 }}>
+                                                        {/* # 실행 결과가 여기에 표시됩니다. */}
                                                         <TextArea
+                                                            style={{ resize: "none", height: "100%" }}
                                                             value={resFromShell}
                                                             readOnly
-                                                            />
+                                                        />
                                                     </div>
                                                 </div>
                                             </div>
