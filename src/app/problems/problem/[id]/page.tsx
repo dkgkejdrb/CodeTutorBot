@@ -99,7 +99,7 @@ export default function Home({ params }: Props) {
                 else {
                     if (Array.isArray(responseMessage)) {
                         // 코드를 정상적으로 실행한 경우
-                        const result = responseMessage.map((item: string, index: number) => index < compiledCode.length - 1 ? item + "\n" : item).join('');
+                        const result = responseMessage.map((item: string, index: number) => index < responseMessage.length - 1 ? item + "\n" : item).join('');
                         setResFromShell(result);
                     } 
                 }
