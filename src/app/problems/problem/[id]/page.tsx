@@ -42,6 +42,7 @@ interface problemDetailType {
     title?: string;
     type: string;
     _id: string;
+    tc_input: any;
 }
 
 export default function Home({ params }: Props) {
@@ -83,7 +84,7 @@ export default function Home({ params }: Props) {
 
     const submitCode = () => {
         isLoading(true);
-        axios.post('/api/runPython', { code: code })
+        axios.post('/api/runPython', { code: code, tc_input: problemDetail?.tc_input })
             .then(response => {
                 isLoading(false);
                 const responseType = response.data.type;
