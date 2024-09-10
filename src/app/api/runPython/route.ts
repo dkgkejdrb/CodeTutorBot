@@ -22,7 +22,7 @@ const options: Options = {
     args: ['value1', 'value2']
 }
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<Response> {
     const scriptPath = path.join(options.scriptPath, 'test.py');
     const newContent = await request.json();
 
