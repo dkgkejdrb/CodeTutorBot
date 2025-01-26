@@ -1,3 +1,4 @@
+// 정답 체크 모듈
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 

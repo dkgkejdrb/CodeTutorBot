@@ -1,4 +1,4 @@
-// 2024.05.21: 최종 코드 리뷰 코멘트 및 응답 검증
+// 2024.04.21: 최종 코드 리뷰 코멘트 및 응답 검증
 "use client";
 
 import Editor from "@monaco-editor/react";
@@ -7,9 +7,7 @@ import axios from "axios";
 import { Button, Tree, Modal, Spin } from 'antd';
 import type { GetProps } from 'antd';
 import { Input } from 'antd';
-import { TreeLayout, TreeQuizData } from '../components/quizList';
-import Image from 'next/image'
-import logo from '@/app/LOGO.png';
+import { TreeLayout, TreeQuizData } from '../../../../components/quizList';
 
 // 2024.04.21: 1차 시스템평가 개선 항목
 // 비어있는 코드에 대한 예외 처리 추가 *처리 완료
@@ -22,8 +20,8 @@ import {
     reviewCommentGenerationPrompt_styleTone, reviewCommentGenerationPrompt_instruction,
     reviewCommentGenerationPrompt_restriction, reviewCommentGenerationPrompt_solution,
     reviewCommentGenerationPrompt_example
-} from '../components/codeFeedbackModule';
-import { answerCheckPrompt } from '../components/answerCheckModule';
+} from '../../../../components/codeFeedbackModule';
+import { answerCheckPrompt } from '../../../../components/answerCheckModule';
 import { UnorderedListOutlined, BulbOutlined, CodeOutlined, RobotOutlined, LoadingOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 
@@ -130,7 +128,7 @@ export default function Home() {
     const onSelect: DirectoryTreeProps['onSelect'] = (keys: any, info) => {
         setQuiz(TreeQuizData[keys[0]]);
         setSolution(reviewCommentGenerationPrompt_solution[keys[0]]);
-
+        // console.log(keys[0])
         if (!keys[0].includes("-")) {
             setIsSelect(true);
         } else {
@@ -144,20 +142,40 @@ export default function Home() {
 
     // 모달 관련
     const [modal, contextHolder] = Modal.useModal();
-    // .. 모달 관련
+    // .. 모달 
+
+    // 타이머 모듈
+    const [time, setTime] = useState(0)
+
+    useEffect(() => {
+        let interval: any
+        if (loading || _loading) {
+            interval = setInterval(() => {
+                setTime((prevTime) => prevTime + 1)
+            }, 10)
+        } else {
+            clearInterval(interval)
+        }
+
+        return () => clearInterval(interval)
+    }, [loading, _loading])
+    // ... 타이머 모듈
 
     return (
         <main style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
             <>
                 <ReachableContext.Provider value="Light">
+                    {/* `contextHolder` should always be placed under the context you want to access */}
                     {contextHolder}
                 </ReachableContext.Provider>
             </>
-            <div style={{ width: "100%", height: 50 }}>
+            <div style={{ width: "100%", height: 50, color: "red" }}>
+                {time / 100}
             </div>
             <div style={{ display: "flex", width: 1140, height: 600 }}>
                 <div className="left" style={{
                     borderRadius: "10px 0px 0px 10px",
+                    // padding: "15px 20px", 
                     borderRight: "1px solid #2c4168", width: 250,
                     backgroundColor: "#202f4a"
                 }}>
@@ -168,14 +186,17 @@ export default function Home() {
                     <div style={{ height: 550, overflowY: "auto", overflowX: "hidden", }}>
                         <DirectoryTree
                             style={{ width: 235, padding: "10px 15px" }}
-
+                            // defaultExpandAll
                             onSelect={onSelect}
                             treeData={TreeLayout()}
+
+                        // defaultExpandedKeys={['0-0-0']}
                         />
                     </div>
                 </div>
                 <div className="middle"
                     style={{
+                        // padding: "15px 20px", 
                         width: 350, backgroundColor: "#202f4a"
                     }}>
                     <div style={{ padding: "10px 15px", color: "#c7c7c7", backgroundColor: "#314972" }}>
@@ -198,10 +219,12 @@ export default function Home() {
                                     height="250px"
                                     language="python"
                                     theme="vs-dark"
+                                    // defaultValue="# 코드를 제출해주세요."
                                     value={extractedCode}
                                     onMount={hadleEditorDidMount}
                                     options={{
                                         minimap: { enabled: false },
+                                        // readOnly: true
                                     }}
                                 />
                                 {
@@ -234,9 +257,13 @@ export default function Home() {
                                         <Button
                                             onClick={() => {
                                                 // 2024.04.21::
+                                                setTime(0)
+                                                _setLoading(true)
                                                 const studentCode = editorRef.current.getValue();
                                                 if (isCodeEmptyOrNonExecutable(studentCode) === true) {
                                                     modal.warning(configError);
+                                                    // console.log("코드가 비어있습니다.");
+                                                    _setLoading(false)
                                                     return
                                                 } if (isCodeEmptyOrNonExecutable(studentCode) === false) {
                                                     _setLoading(true);
@@ -283,8 +310,11 @@ export default function Home() {
                                         <Button
                                             onClick={() => {
                                                 // 2024.04.21::
+                                                setTime(0)
+                                                // setLoading(true);
                                                 const studentCode = editorRef.current.getValue();
                                                 if (isCodeEmptyOrNonExecutable(studentCode) === true) {
+                                                    // setLoading(false);
                                                     modal.warning(configError);
                                                     // console.log("코드가 비어있습니다.");
                                                     return

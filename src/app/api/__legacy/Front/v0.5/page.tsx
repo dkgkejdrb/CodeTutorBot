@@ -1,3 +1,4 @@
+// 2024.04.19: 1차 시스템 평가 시실시했을 때 버전
 "use client";
 
 import Editor from "@monaco-editor/react";
@@ -6,14 +7,16 @@ import axios from "axios";
 import { Button, Tree, Modal, Spin } from 'antd';
 import type { GetProps } from 'antd';
 import { Input } from 'antd';
-import { TreeLayout, TreeQuizData } from '../components/quizList';
+import { TreeLayout, TreeQuizData } from '../../../../components/quizList';
+// from './components/quizList';
+
 import {
     review_roleSettingPrompt, reviewNecessityPredictionPrompt,
     reviewCommentGenerationPrompt_styleTone, reviewCommentGenerationPrompt_instruction,
     reviewCommentGenerationPrompt_restriction, reviewCommentGenerationPrompt_solution,
     reviewCommentGenerationPrompt_example
-} from '../components/codeFeedbackModule';
-import { answerCheckPrompt } from '../components/oldAnswerCheckModule';
+} from '../../../../components/oldCodeFeedbackModule';
+import { answerCheckPrompt } from "../../../../components/oldAnswerCheckModule";
 import { UnorderedListOutlined, BulbOutlined, CodeOutlined, RobotOutlined, LoadingOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 
@@ -119,16 +122,39 @@ export default function Home() {
     //     modal.warning(config);
     // }, [])
 
+    // 타이머 모듈
+    const [time, setTime] = useState(0)
 
+    useEffect(() => {
+        let interval: any
+        if (loading || _loading) {
+            interval = setInterval(() => {
+                setTime((prevTime) => prevTime + 1)
+            }, 10)
+        } else {
+            clearInterval(interval)
+        }
+
+        return () => clearInterval(interval)
+    }, [loading, _loading])
+    // ... 타이머 모듈
+
+
+    // 토큰 계산 state
+
+    // ... 토큰 계산 state
     return (
-        <main style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <main style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
             <>
                 <ReachableContext.Provider value="Light">
                     {/* `contextHolder` should always be placed under the context you want to access */}
                     {contextHolder}
                 </ReachableContext.Provider>
             </>
-            <div style={{ marginTop: 50, display: "flex", width: 1140, height: 600 }}>
+            <div style={{ width: "100%", height: 50, color: "red" }}>
+                {time / 100}
+            </div>
+            <div style={{ display: "flex", width: 1140, height: 600 }}>
                 <div className="left" style={{
                     borderRadius: "10px 0px 0px 10px",
                     // padding: "15px 20px", 
@@ -168,20 +194,30 @@ export default function Home() {
                     </div>
                     {
                         isSelect ?
-                            <Editor
-                                className="text-animation"
-                                width="480px"
-                                height="250px"
-                                language="python"
-                                theme="vs-dark"
-                                // defaultValue="# 코드를 제출해주세요."
-                                value={extractedCode}
-                                onMount={hadleEditorDidMount}
-                                options={{
-                                    minimap: { enabled: false },
-                                    // readOnly: true
-                                }}
-                            />
+                            <div style={{ position: "relative" }}>
+                                <Editor
+                                    className="text-animation"
+                                    width="480px"
+                                    height="250px"
+                                    language="python"
+                                    theme="vs-dark"
+                                    // defaultValue="# 코드를 제출해주세요."
+                                    value={extractedCode}
+                                    onMount={hadleEditorDidMount}
+                                    options={{
+                                        minimap: { enabled: false },
+                                        // readOnly: true
+                                    }}
+                                />
+                                {
+                                    loading ?
+                                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", top: 10, left: 10, position: "absolute", width: 480, height: 250 }}>
+                                            <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+                                        </div>
+                                        :
+                                        <></>
+                                }
+                            </div>
                             :
                             <div
                                 style={{
@@ -202,8 +238,19 @@ export default function Home() {
                                         :
                                         <Button
                                             onClick={() => {
+                                                console.log(
+                                                    answerCheckPrompt
+                                                    + "\n\n[파이썬 문제]\n" + quiz + "\n[/파이썬 문제]"
+                                                    + "\n[코드]\n" + editorRef.current.getValue()
+                                                    + "\n\n[정답코드]" + solution + "\n[/정답코드]"
+                                                )
+                                                setTime(0);
                                                 _setLoading(true);
-                                                axios.post('/pythonApi', {
+                                                axios.post('/pythonApi0.5', {
+                                                    headers: {
+                                                        Accept: 'application/json',
+                                                        'Access-Control-Allow-Origin': '*',
+                                                    },
                                                     data:
                                                         answerCheckPrompt
                                                         + "\n\n[파이썬 문제]\n" + quiz + "\n[/파이썬 문제]"
@@ -241,9 +288,14 @@ export default function Home() {
                                         :
                                         <Button
                                             onClick={() => {
+                                                setTime(0);
                                                 setLoading(true);
                                                 // setExtractedCode(""); // 코멘트 영역 초기화
-                                                axios.post('/api', {
+                                                axios.post('/api0.5', {
+                                                    headers: {
+                                                        Accept: 'application/json',
+                                                        'Access-Control-Allow-Origin': '*',
+                                                    },
                                                     // 프로젝트 보고서 쓸 때, 아래 data 구조 참고
                                                     data:
                                                         review_roleSettingPrompt

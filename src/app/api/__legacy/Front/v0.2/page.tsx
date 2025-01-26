@@ -9,7 +9,7 @@ import axios from "axios";
 import { Button, Tree } from 'antd';
 import type { GetProps, TreeDataNode } from 'antd';
 import { Input } from 'antd';
-import { TreeLayout } from '../components/quizList';
+import { TreeLayout } from '../../../../components/quizList';
 const { TextArea } = Input;
 
 

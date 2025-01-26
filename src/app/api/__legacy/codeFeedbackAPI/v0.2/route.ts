@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
 const URL: any = process.env.POST_URL; // URL은 사용하지 않는듯
-const KEY: any = process.env.OPENAI_API_KEY;
+const KEY: any = process.env.OPENAI_API_KEY; 
 
 
 export async function GET() {
@@ -12,6 +12,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+    console.log(KEY);// OPENAI_API_KEY 확인
     const _content = await request.json();
     // console.log(`클라에서 넘어온것: ${_content.data}`);
 

@@ -7,7 +7,7 @@ import axios from "axios";
 import { Button, Tree, Modal, Spin } from 'antd';
 import type { GetProps } from 'antd';
 import { Input } from 'antd';
-import { TreeLayout, TreeQuizData } from '../components/quizList_en';
+import { TreeLayout, TreeQuizData } from '../../../../components/quizList_en';
 import Image from 'next/image'
 import logo from '@/app/LOGO.png';
 
@@ -22,8 +22,8 @@ import {
     reviewCommentGenerationPrompt_styleTone, reviewCommentGenerationPrompt_instruction,
     reviewCommentGenerationPrompt_restriction, reviewCommentGenerationPrompt_solution,
     reviewCommentGenerationPrompt_example
-} from '../components/codeFeedbackModule';
-import { answerCheckPrompt } from '../components/answerCheckModule';
+} from '../../../../components/codeFeedbackModule';
+import { answerCheckPrompt } from '../../../../components/answerCheckModule';
 import { UnorderedListOutlined, BulbOutlined, CodeOutlined, RobotOutlined, LoadingOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 
