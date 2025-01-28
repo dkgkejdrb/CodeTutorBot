@@ -29,57 +29,59 @@ const createSubmissions = (data: any) => {
 
 
 export async function POST(request: Request) {
-    const content = await request.json();
-    // console.log(content);
+  const content = await request.json();
+  // console.log(content);
 
-    const option_creation_submission = {
-        method: 'POST',
-        url: 'https://judge0-ce.p.rapidapi.com/submissions/batch',
-        params: {
-        //   base64_encoded: 'true',
-        //   wait: 'false',
-        //   fields: '*'
-        },
-        headers: {
-          'x-rapidapi-key': 'f54a007339msh4a1a11a38459fe9p1d7d8fjsn67f89e4444c0',
-          'x-rapidapi-host': 'judge0-ce.p.rapidapi.com',
-          'Content-Type': 'application/json'
-        },
-        data: {
-            submissions : createSubmissions(content)
-        }
-      };
+  const option_creation_submission = {
+    method: 'POST',
+    url: 'https://judge0-ce.p.rapidapi.com/submissions/batch',
+    params: {
+      //   base64_encoded: 'true',
+      //   wait: 'false',
+      //   fields: '*'
+    },
+    headers: {
+      'x-rapidapi-key': 'f54a007339msh4a1a11a38459fe9p1d7d8fjsn67f89e4444c0',
+      'x-rapidapi-host': 'judge0-ce.p.rapidapi.com',
+      'Content-Type': 'application/json'
+    },
+    data: {
+      submissions: createSubmissions(content)
+    }
+  };
 
-      console.log(createSubmissions(content))
-     
+  // console.log(createSubmissions(content))
 
-      try {
-          const response = await axios.request(option_creation_submission);
-          const tokens = (response.data as { token: string }[]).map(item => item.token).join(',');
-          // console.log(tokens);
 
-          const option_get_submission = {
-            method: 'GET',
-            url: `https://judge0-ce.p.rapidapi.com/submissions/batch`,
-            params: {
-              base64_encoded: 'true',
-              tokens: tokens,
-              fields: '*'
-            },
-            headers: {
-              'x-rapidapi-key': 'f54a007339msh4a1a11a38459fe9p1d7d8fjsn67f89e4444c0',
-              'x-rapidapi-host': 'judge0-ce.p.rapidapi.com'
-            }
-          };
-          
-          try {
-              const response = await axios.request(option_get_submission);
-              
-              return NextResponse.json(response.data);
-          } catch (error) {
-              console.error(error);
-          }
-      } catch (error) {
-          console.error(error);
+  try {
+    const response = await axios.request(option_creation_submission);
+    const tokens = (response.data as { token: string }[]).map(item => item.token).join(',');
+    // console.log(tokens);
+
+    const option_get_submission = {
+      method: 'GET',
+      url: `https://judge0-ce.p.rapidapi.com/submissions/batch`,
+      params: {
+        base64_encoded: 'true',
+        tokens: tokens,
+        fields: '*'
+      },
+      headers: {
+        'x-rapidapi-key': 'f54a007339msh4a1a11a38459fe9p1d7d8fjsn67f89e4444c0',
+        'x-rapidapi-host': 'judge0-ce.p.rapidapi.com'
       }
+    };
+
+    try {
+      const response = await axios.request(option_get_submission);
+
+      // console.log(response.data);
+      return NextResponse.json(response.data);
+
+    } catch (error) {
+      console.error(error);
+    }
+  } catch (error) {
+    console.error(error);
+  }
 }
