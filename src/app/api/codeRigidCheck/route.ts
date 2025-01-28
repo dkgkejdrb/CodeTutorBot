@@ -5,12 +5,20 @@ import { StringOutputParser } from "@langchain/core/output_parsers";
 
 const KEY = process.env.OPENAI_API_KEY;
 
-// problem_description: 'Write a program that takes height (cm) and weight (kg) as input and outputs the BMI value as shown in the "Output Example."\n' +        
-// '\n' +
-// '<BMI formula> bmi = weight (kg) / (height (m) * height (m))',
-// stdin: [ '75\n183' ],
-// expected_output: [ '22.4' ],
-// source_code: 'w=int(input())\r\nh=int(input())\r\nh=h*0.01\r\nprint("%.1f" %(w/(h*h)))'
+const SCP_instruction = `
+Analyze the [SubmittedCode] provided by the student for the [PythonProblem]. 
+Although it passed all test cases, ensure rigorous validation beyond the test cases. 
+If the [SubmittedCode] matches any of the following criteria, respond only with the corresponding criteria items' name.
+`
+const SCP_criteria = `
+Unnecessary Code: Code contains elements not essential for solving the problem.
+
+Requirement not met: The solution ignores a specified requirement and solves the problem differently. 
+
+Hard Coding: The solution uses hard-coded input/output examples instead of general logic. 
+
+Computation Error: Errors occur due to overly complex or incorrect logic. 
+`
 
 export async function POST(request: Request) {
 
@@ -19,7 +27,7 @@ export async function POST(request: Request) {
 
     try {
         // RNP 모델 셋팅
-        const RNP_Model = new ChatOpenAI({
+        const SCP_Model = new ChatOpenAI({
             openAIApiKey: KEY,
             // model: "gpt-4o-mini",
             model: "gpt-4o",
@@ -31,28 +39,22 @@ export async function POST(request: Request) {
         });
 
         // RNP 프롬프트 생성
-        const RNP_Prompt = ChatPromptTemplate.fromMessages([
-            ["system", "You are a answer checker"],
+        const SCP_Prompt = ChatPromptTemplate.fromMessages([
+            // ["system", "You are a answer checker"],
+            ["system", "You are a teacher who provides a code review submitted by students"],
             ["user",
+                SCP_instruction + SCP_criteria +
                 `
-                Task: The [Submitted Code] submitted by the student for the [Python Problem] has passed all test cases.
-                However, test cases alone are not sufficient for a rigorous validation of the correct code.
-                If the [Submitted Code] meets any of the following four criteria, respond only with the corresponding items.
-
-                1. Unnecessary Code: Code that is not essential for solving the problem has been added 
-                2. Requirement not met: When the submitted code ignores a specified requirement and is solved differently 
-                3. Hard Coding: When the result is coded hard using the input/output example as is without proper logic 
-                4. Computation Error: Calculation errors caused by complex logic 
-                
-                Python Problem: {pythonProblem}
-                Submitted Code: {submittedCode}
+                PythonProblem: {pythonProblem}
+                SubmittedCode: {submittedCode}
                 Solution: {solution}
                 `
             ]
         ]);
+        // console.log(RNP_Prompt.promptMessages);
 
         // RNP 체인 생성, outputparser 응답 결과만 추출
-        const RNP_chain = RNP_Prompt.pipe(RNP_Model).pipe(new StringOutputParser());
+        const RNP_chain = SCP_Prompt.pipe(SCP_Model).pipe(new StringOutputParser());
 
         // console.log(RNP_chain);
 
@@ -63,9 +65,9 @@ export async function POST(request: Request) {
             solution: content.solution
         })
 
-        console.log(RNP_response);
+        // console.log(RNP_response);
 
-        return NextResponse.json({ message: "" })
+        return NextResponse.json({ message: RNP_response });
     }
     catch {
         return NextResponse.json({ error: "Failed to evaluate necessity" });

@@ -29,8 +29,8 @@ export async function POST(request: Request) {
             ["system", "You are a code reviewer who evaluates whether a review is necessary."],
             ["user",
                 `
-                Based on the [pythonProblem], [Submitted Code] and [Solution], respond with 'yes' if a code review is needed or 'no' if not.
-                Python Problem: {pythonProblem}
+                Based on the [PythonProblem], [SubmittedCode] and [Solution], respond with 'yes' if a code review is needed or 'no' if not.
+                PythonProblem: {pythonProblem}
                 Submitted Code: {submittedCode}
                 Solution: {solution}
                 `
@@ -64,16 +64,10 @@ export async function POST(request: Request) {
 
             const RCGP_styleTone = `Review with vocabulary difficulty level that primary and secondary school students can understand.`;
             const RCGP_instruction =
-                // `
-                // As in the example shown in [Example][/Example], [RC][/RC] and [R][/R] must be included in the response.
-                // In [Submitted code], add ‘Code to fix’ comment to the end of incorrect code lines. 
-                // Reply to [RC][/RC] with commented [Submitted code] as is. 
-                // Respond to code reviews with [R][/R] in a ‘polite tone’ and within three sentences.
-                // `;
                 `
             As in the example shown in [Example], [RC][/RC] and [R][/R] must be included in the response. 
-            In [Submitted code], add ‘Code to fix’ comment to the end of incorrect code lines. 
-            Reply to [RC][/RC] with commented [Submitted code] as is. 
+            In [SubmittedCode], add ‘Code to fix’ comment to the end of incorrect code lines. 
+            Reply to [RC][/RC] with commented [SubmittedCode] as is. 
             Respond to code reviews with [R][/R] in a ‘polite tone’ and within three sentences and emoji.
             `
             const RCGP_restriction = `
@@ -99,13 +93,15 @@ export async function POST(request: Request) {
                 ["user",
                     RCGP_styleTone + RCGP_instruction + RCGP_restriction +
                     `
-                    Python Problem: {pythonProblem}
-                    Submitted Code: {submittedCode}
+                    PythonProblem: {pythonProblem}
+                    SubmittedCode: {submittedCode}
                     Solution: {solution}
                     Example: {example}
                     `
                 ]
             ])
+            // console.log(RCGP_Prompt);
+            //console.log(RCGP_Prompt.promptMessages);
 
             // RCGP 체인 생성
             const RCGP_chain = RCGP_Prompt.pipe(RCGP_Model).pipe(new StringOutputParser());

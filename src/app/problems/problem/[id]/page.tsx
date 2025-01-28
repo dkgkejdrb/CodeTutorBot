@@ -10,8 +10,7 @@ import Breadcrumb from './Breadcrumb';
 import { ItemType } from '@/app/components/Breadcrumb';
 import { useRef, useEffect, useState, createContext } from 'react';
 import axios from "axios";
-import { RobotOutlined } from '@ant-design/icons';
-import { Button, Input, Modal } from "antd";
+import { Button, Input, Modal, Spin } from "antd";
 
 const { TextArea } = Input;
 
@@ -146,10 +145,10 @@ export default function Home({ params }: Props) {
             cpu_time_limit: problemDetail?.cpu_time_limit,
             memory_limit: problemDetail?.memory_limit
         })
-            .then(response => {
+            .then(response1 => {
                 setLoading1(false);
                 // 각 Testcase 실행결과 표시
-                const _answerCheckData = response.data.submissions.map((submission: any, index: any) =>
+                const _answerCheckData = response1.data.submissions.map((submission: any, index: any) =>
                     `Test case #${index + 1} result: ${submission.status.description} (${submission.time} sec)`
                 ).join('\n');
 
@@ -157,18 +156,10 @@ export default function Home({ params }: Props) {
 
 
                 // "Accepted"의 개수를 계산
-                const acceptedCount = response.data.submissions.filter((submission: any) => submission.status.description === "Accepted").length;
-
-                // 결과 추가
-                const __answerCheckData =
-                    _answerCheckData +
-                    `\n\nOverall result: ` +
-                    (acceptedCount === response.data.submissions.length ? "Correct 👍" : "Wrong 😅");
-
-                setAnswerCheckData(__answerCheckData);
+                const acceptedCount = response1.data.submissions.filter((submission: any) => submission.status.description === "Accepted").length;
 
                 // 만약 전부 정답이라면 AI로 한번더 엄격한 채점 요청
-                if (acceptedCount === response.data.submissions.length) {
+                if (acceptedCount === response1.data.submissions.length) {
 
                     axios.post('/api/codeRigidCheck', {
                         pythonProblem: problemDetail?.description,
@@ -177,13 +168,50 @@ export default function Home({ params }: Props) {
                         solution: problemDetail?.solution,
                         source_code: code,
                     })
-                        .then(response => {
+                        .then(response2 => {
+                        // 결과 추가
+                        const __answerCheckData =
+                            _answerCheckData 
+                            +
+                            (response2.data.message ? `\n\nCode Tutor Check 👩🏻‍🏫 : ` + response2.data.message : "")
+                            +
+                            `\n===\n\nOverall result: `
+                            +
+                            (acceptedCount === response1.data.submissions.length ? "Correct 👍" : "Wrong 😅") ;
+                            // console.log(response2.data.message);
 
+
+                            // 전체 정답 결과가 Correct => True, 그렇지 않으면 => False
+                            if (acceptedCount === response1.data.submissions.length) {
+                                setIsCorrectAnswer(true);
+                            } else {
+                                setIsCorrectAnswer(false);
+                            }
+
+                            // 결과 반환
+                            setAnswerCheckData(__answerCheckData);
                         })
                         .catch(error => {
                             console.error('에러 발생:', error);
                         });
                 }
+                // 만약 오답이라면 TEST CASE만 그대로 반환
+                else {
+                    const __answerCheckData =
+                    _answerCheckData +
+                    `\n===\n\nOverall result: ` +
+                    (acceptedCount === response1.data.submissions.length ? "Correct 👍" : "Wrong 😅");
+
+                    // 전체 정답 결과가 Correct => True, 그렇지 않으면 => False
+                    if (acceptedCount === response1.data.submissions.length) {
+                        setIsCorrectAnswer(true);
+                    } else {
+                        setIsCorrectAnswer(false);
+                    }
+                
+                    setAnswerCheckData(__answerCheckData);
+                }
+
             })
             .catch(error => {
                 setLoading1(false);
@@ -248,7 +276,14 @@ export default function Home({ params }: Props) {
     };
     // .. 모달 관련
 
-
+    // 모달 useEffect
+    useEffect(()=>{
+        if (isCorrectAnswer === true) {
+            modal.success(configSucces);
+        } else if (isCorrectAnswer === false) {
+            modal.error(configFail);
+        }
+    }, [isCorrectAnswer])
 
     return (
         <div className='problemPage'>
@@ -258,16 +293,54 @@ export default function Home({ params }: Props) {
                 </ReachableContext.Provider>
             </>
             {
-
                 // !loading && problemDetail ?
                 problemDetail ?
                     <div className='_problemPage'>
                         <Breadcrumb items={items} afterItem={problemDetail.title} />
                         <div className='container_'>
                             <div className='_container'>
-                                {/* {params.id} */}
                                 <div className='left' style={{ overflow: "auto" }}>
-                                    {
+                                {
+                                    problemDetail.description && (
+                                        <div className="__container">
+                                            <div className="title">[Instruction]</div>
+                                            <p>{problemDetail.description}</p>
+                                        </div>
+                                    )
+                                }
+
+                                {Array.isArray(problemDetail.stdin) &&
+                                    problemDetail.stdin.map((input, index) => (
+                                        <div className="__container" style={{ marginTop: 16 }} key={`input-${index}`}>
+                                            <div className="title">{`Input Example #${index + 1}`}</div>
+                                            <div className="resFromShell">
+                                                <TextArea
+                                                    rows={3}
+                                                    style={{ resize: "none", height: "100%" }}
+                                                    value={input}
+                                                    readOnly
+                                                />
+                                            </div>
+                                        </div>
+                                    ))
+                                }
+
+                                {Array.isArray(problemDetail.stdout) &&
+                                    problemDetail.stdout.map((output, index) => (
+                                        <div className="__container" style={{ marginTop: 16 }} key={`output-${index}`}>
+                                            <div className="title">{`Output Example #${index + 1}`}</div>
+                                            <div className="resFromShell">
+                                                <TextArea
+                                                    rows={3}
+                                                    style={{ resize: "none", height: "100%" }}
+                                                    value={output}
+                                                    readOnly
+                                                />
+                                            </div>
+                                        </div>
+                                    ))
+                                }
+                                    {/* {
                                         problemDetail.description &&
                                         <div className='__container'>
                                             <div className='title'>[Instruction]</div>
@@ -280,46 +353,58 @@ export default function Home({ params }: Props) {
                                         Array.isArray(problemDetail.stdin) && problemDetail.stdin[0] &&
                                         <div className='__container' style={{ marginTop: 16 }}>
                                             <div className='title'>Input Example #1</div>
-                                            <TextArea
-                                                style={{ resize: "none", height: "100%" }}
-                                                value={problemDetail.stdin[0]}
-                                                readOnly
-                                            />
-                                        </div>
-                                    }
-                                    {
-                                        Array.isArray(problemDetail.stdin) && problemDetail.stdin[1] &&
-                                        <div className='__container' style={{ marginTop: 16 }}>
-                                            <div className='title'>Input Example #2</div>
-                                            <TextArea
-                                                style={{ resize: "none", height: "100%" }}
-                                                value={problemDetail.stdin[1]}
-                                                readOnly
-                                            />
+                                            <div className='resFromShell' >
+                                                <TextArea
+                                                    rows={3}
+                                                    style={{ resize: "none", height: "100%" }}
+                                                    value={problemDetail.stdin[0]}
+                                                    readOnly
+                                                />
+                                            </div>
                                         </div>
                                     }
                                     {
                                         Array.isArray(problemDetail.stdout) && problemDetail.stdout[0] &&
                                         <div className='__container' style={{ marginTop: 16 }}>
                                             <div className='title'>Output Example #1</div>
-                                            <TextArea
-                                                style={{ resize: "none", height: "100%" }}
-                                                value={problemDetail.stdout[0]}
-                                                readOnly
-                                            />
+                                            <div className='resFromShell' >
+                                                <TextArea
+                                                    rows={3}
+                                                    style={{ resize: "none", height: "100%" }}
+                                                    value={problemDetail.stdout[0]}
+                                                    readOnly
+                                                />
+                                            </div>
+                                        </div>
+                                    }
+                                    {
+                                        Array.isArray(problemDetail.stdin) && problemDetail.stdin[1] &&
+                                        <div className='__container' style={{ marginTop: 16 }}>
+                                            <div className='title'>Input Example #2</div>
+                                            <div className='resFromShell' >
+                                                <TextArea
+                                                    rows={3}
+                                                    style={{ resize: "none", height: "100%" }}
+                                                    value={problemDetail.stdin[1]}
+                                                    readOnly
+                                                />
+                                            </div>
                                         </div>
                                     }
                                     {
                                         Array.isArray(problemDetail.stdout) && problemDetail.stdout[1] &&
                                         <div className='__container' style={{ marginTop: 16 }}>
                                             <div className='title'>Output Example #2</div>
-                                            <TextArea
-                                                style={{ resize: "none", height: "100%" }}
-                                                value={problemDetail.stdout[1]}
-                                                readOnly
-                                            />
+                                            <div className='resFromShell' >
+                                                <TextArea
+                                                    rows={3}
+                                                    style={{ resize: "none", height: "100%" }}
+                                                    value={problemDetail.stdout[1]}
+                                                    readOnly
+                                                />
+                                            </div>
                                         </div>
-                                    }
+                                    } */}
                                     {
                                         problemDetail.hint &&
                                         <div className='__container bottom' style={{ marginTop: 16 }}>
@@ -375,12 +460,17 @@ export default function Home({ params }: Props) {
                                                     <div className='title' style={{ paddingBottom: 12, borderBottom: "solid 2px #eee" }}>Results</div>
                                                     <div className='resFromShell' style={{ paddingTop: 12, height: "calc(100% - 12px - 32px - 12px)", fontSize: 14 }}>
                                                         {/* # 체점 결과가 여기에 표시됩니다. */}
-                                                        <TextArea
+                                                        {
+                                                            !loading1?
+                                                            <TextArea
                                                             style={{ resize: "none", height: "100%" }}
                                                             // value={resFromShell}
                                                             value={answerCheckData}
                                                             readOnly
                                                         />
+                                                            :
+                                                            <Spin style={{ height: "100%", width: "100%", textAlign: "center", background: "rgba(0,0,0,0.05)", display: "flex", justifyContent: "center", alignItems: "center"}} />
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>
@@ -390,8 +480,8 @@ export default function Home({ params }: Props) {
                                             <div style={{ display: "flex", width: "calc(50% - 12px)", height: "100%" }}>
                                                 <div style={{ width: "100%", height: "100%", paddingTop: 12 }}>
                                                     <div className='title' style={{ paddingBottom: 12, borderBottom: "solid 2px #eee", display: "flex" }}>
-                                                        <RobotOutlined />
-                                                        <div style={{ marginLeft: 8 }}>Code Tutor</div>
+                                                        {/* <RobotOutlined /> */}
+                                                        <div style={{ marginLeft: 8 }}>👩🏻‍🏫 Code Tutor</div>
                                                     </div>
                                                     {
                                                         !extractedComment ?
@@ -399,12 +489,19 @@ export default function Home({ params }: Props) {
                                                                 # Code tutor's assistance will be displayed here.
                                                             </div>
                                                             :
-                                                            <div style={{ paddingTop: 12, height: "calc(100% - 12px - 32px - 12px)", fontSize: 14 }}>
-                                                                <TextArea
-                                                                    style={{ resize: "none", height: "100%" }}
-                                                                    value={extractedComment}
-                                                                    readOnly
-                                                                />
+                                                            <div className='resFromShell' style={{ paddingTop: 12, height: "calc(100% - 12px - 32px - 12px)", fontSize: 14 }}>
+                                                                {
+                                                                    loading2 ?
+                                                                    <Spin style={{ height: "100%", width: "100%", textAlign: "center", background: "rgba(0,0,0,0.05)", display: "flex", justifyContent: "center", alignItems: "center"}} />
+                                                                    :                                                          
+                                                                    <TextArea
+                                                                        style={{ resize: "none", height: "100%" }}
+                                                                        value={extractedComment}
+                                                                        readOnly
+                                                                    />
+
+                                                                }
+                                                                
                                                             </div>
                                                     }
 
@@ -425,11 +522,11 @@ export default function Home({ params }: Props) {
                                         if (codeValidation(code) === true) {
                                             modal.warning(configError);
                                             setLoading1(false);
-                                            return
                                         }
                                         if (codeValidation(code) === false) {
-
+                                            
                                             codeAnswerCheck();
+                                            setLoading1(false);
                                         }
 
                                     }}
