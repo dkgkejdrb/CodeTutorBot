@@ -4,36 +4,36 @@
 import './Header.css'
 import { Menu } from 'antd';
 import Image from 'next/image';
-import headerLogo from '/public/headerLogo.png';
+import headerLogo from '/public/LOGO.png';
 import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import { clearToken } from '@/store/slices/authSlice';
 
 const navItems = [
   {
-    label: '문제',
+    label: 'Problems',
     key: 'exercise',
     children: [
       {
-        label: <Link href="/problems">전체 문제</Link>,
+        label: <Link href="/problems">Python Problems</Link>,
         key: 'exerciseTotal',
         
         
       },
-      {
-        label: '단계별로 풀기',
-        key: 'exerciseLevel'
-      }
+      // {
+      //   label: '단계별로 풀기',
+      //   key: 'exerciseLevel'
+      // }
     ]
   },
-  {
-    label: '랭킹',
-    key: 'rank',
-  },
-  {
-    label: '문의',
-    key: 'contact',
-  },
+  // {
+  //   label: '랭킹',
+  //   key: 'rank',
+  // },
+  // {
+  //   label: '문의',
+  //   key: 'contact',
+  // },
 ]
 
 const linkSytle = {
@@ -60,21 +60,21 @@ export default function Home({isLogin}:headerProps)  {
                 <>
                   <ul>
                     <li>
-                      <Link href="/login" style={linkSytle}>로그인</Link>
+                      <Link href="/login" style={linkSytle}>Sign in</Link>
                     </li>
                     <div className='topbar-devider'></div>
                     <li>
-                      <Link href="/register" style={linkSytle}>회원가입</Link>
+                      <Link href="/register" style={linkSytle}>Sigh up</Link>
                     </li>
                   </ul>
                 </>
                 :
                 <>
                   <ul>
-                    <li>
-                      <Link href="/register" style={linkSytle}>마이페이지</Link>
+                    {/* <li>
+                      <Link href="/register" style={linkSytle}>My page</Link>
                     </li>
-                    <div className='topbar-devider'></div>
+                    <div className='topbar-devider'></div> */}
                     <li>
                       <Link href='/' onClick={logoutHandler} style={linkSytle}>로그아웃</Link>
                     </li>
@@ -91,7 +91,7 @@ export default function Home({isLogin}:headerProps)  {
                 <Image width={210} height={66} src={headerLogo} alt="" style={{ position: "absolute", bottom: "-46px"}} />
               </Link>
             </div>            
-            <Menu mode="horizontal" items={navItems} style={{ fontSize: 14 }}></Menu>
+            <Menu mode="horizontal" items={navItems}></Menu>
           </div>
         </div>
       </div>

@@ -21,7 +21,7 @@ const items: ItemType[] = [
   {
     href: '/problems',
     title: (<>
-      전체 문제
+      Python Problems
     </>)
   }
 ]
@@ -116,7 +116,7 @@ export default function Home() {
     <main>
       <Header isLogin={isLogin} />
       <Breadcrumb items={items} />
-      <div className='problems container' style={{ paddingTop: 40 }}>
+      {/* <div className='problems container' style={{ paddingTop: 40 }}>
         <div className='searchBar' style={{ display: "flex" }}>
           <div style={{ display: "flex", width: "50%" }}>
             <Select placeholder="상태">
@@ -137,11 +137,11 @@ export default function Home() {
             <Button type="primary" shape="circle" icon={<SearchOutlined />} />
           </div>
         </div>
-      </div>
+      </div> */}
       <div className='problems container' style={{ paddingTop: 24 }}>
         <Table dataSource={response} loading={!response}>
-          <Column title="상태" dataIndex="isCorrect" key="isCorrect" width="10%" />
-          <Column title="제목" dataIndex="title" key="title" width="50%" 
+          <Column title="Status" dataIndex="isCorrect" key="isCorrect" width="10%" />
+          <Column title="Title" dataIndex="title" key="title" width="30%" 
             render={(text)=>(<a>{text}</a>)}
             onCell={(record: any, index) => {
               return {
@@ -152,12 +152,12 @@ export default function Home() {
               }
             }}
           />
-          <Column title="난이도" dataIndex="difficulty" key="difficulty" width="20%" />
-          <Column title="완료한 사람" dataIndex="totalSubmissions" key="totalSubmissions" width="10%" />
-          <Column title="정답률" dataIndex="accuracyRate" key="accuracyRate" width="10%" />
+          <Column title="Difficulty" dataIndex="difficulty" key="difficulty" width="20%" />
+          <Column title="Total Submissions" dataIndex="totalSubmissions" key="totalSubmissions" width="10%" />
+          <Column title="Accuracy Rate" dataIndex="accuracyRate" key="accuracyRate" width="10%" />
         </Table>
       </div>
-      <Pagination onChange={onChange} total={pageSize} />
+      {/* <Pagination onChange={onChange} total={pageSize} /> */}
     </main>
   );
 }

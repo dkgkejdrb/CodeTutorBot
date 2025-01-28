@@ -7,7 +7,7 @@ import axios from "axios";
 import { Button, Tree, Modal, Spin } from 'antd';
 import type { GetProps } from 'antd';
 import { Input } from 'antd';
-import { TreeLayout, TreeQuizData } from '../../../../components/quizList';
+import { TreeLayout, TreeQuizData } from '../../components/quizList';
 // from './components/quizList';
 
 import {
@@ -15,8 +15,8 @@ import {
     reviewCommentGenerationPrompt_styleTone, reviewCommentGenerationPrompt_instruction,
     reviewCommentGenerationPrompt_restriction, reviewCommentGenerationPrompt_solution,
     reviewCommentGenerationPrompt_example
-} from '../../../../components/oldCodeFeedbackModule';
-import { answerCheckPrompt } from "../../../../components/oldAnswerCheckModule";
+} from '../../components/oldCodeFeedbackModule';
+import { answerCheckPrompt } from "../../components/oldAnswerCheckModule";
 import { UnorderedListOutlined, BulbOutlined, CodeOutlined, RobotOutlined, LoadingOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 

@@ -17,9 +17,9 @@ type FieldType = {
     user_id: "",
     password_1: "",
     password_2: "",
-    question: "teacherName",
-    answer: "",
-    side: "lion"
+    // question: "teacherName",
+    // answer: "",
+    grade: "lion"
 };
 
 const { Option } = Select;
@@ -30,7 +30,7 @@ const items: ItemType[] = [
     {
         href: '/register',
         title: (<>
-            회원가입
+            Sign up
         </>)
     }
 ]
@@ -88,12 +88,12 @@ export default function Home() {
                     password_2: "",
                     question: "teacherName",
                     answer: "",
-                    side: "lion"
+                    side: "el-6"
                 }}
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
             >
-                <div>아이디</div>
+                <div>ID</div>
                 <Form.Item<FieldType>
                     name="user_id"
                     rules={[{ required: true, message: '비어있습니다.' }]}
@@ -101,7 +101,7 @@ export default function Home() {
                     <Input></Input>
                 </Form.Item>
 
-                <div>비밀번호</div>
+                <div>Password</div>
                 <Form.Item<FieldType>
                     name="password_1"
                     rules={[{ required: true, message: '비어있습니다.' }]}
@@ -109,7 +109,7 @@ export default function Home() {
                     <Input></Input>
                 </Form.Item>
 
-                <div>비밀번호 확인</div>
+                <div>Password Confirm</div>
                 <Form.Item<FieldType>
                     name="password_2"
                     rules={[
@@ -127,7 +127,7 @@ export default function Home() {
                     <Input></Input>
                 </Form.Item>
 
-                <div>질문</div>
+                {/* <div>질문</div>
                 <Form.Item<FieldType>
                     name="question"
                     rules={[{ required: true }]}
@@ -147,23 +147,27 @@ export default function Home() {
                     rules={[{ required: true, message: '비어있습니다.' }]}
                 >
                     <Input></Input>
-                </Form.Item>
+                </Form.Item> */}
 
-                <div>진영</div>
+                <div>Grade</div>
                 <Form.Item<FieldType>
-                    name="side"
+                    name="grade"
                     rules={[{ required: true }]}
                 >
                     <Select>
-                        <Option value="lion">사자</Option>
-                        <Option value="eagle">독수리</Option>
-                        <Option value="tiger">호랑이</Option>
+                        <Option value="el-3">초등 3학년</Option>
+                        <Option value="el-4">초등 4학년</Option>
+                        <Option value="el-5">초등 5학년</Option>
+                        <Option value="el-6">초등 6학년</Option>
+                        <Option value="md-1">중등 1학년</Option>
+                        <Option value="md-2">중등 2학년</Option>
+                        <Option value="md-3">중등 3학년</Option>
                     </Select>
                 </Form.Item>
 
                 <Form.Item>
                     <Button type="primary" htmlType="submit">
-                        회원가입
+                        Submit
                     </Button>
                 </Form.Item>
             </Form>

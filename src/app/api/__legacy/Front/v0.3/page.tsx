@@ -6,13 +6,13 @@ import axios from "axios";
 import { Button, Tree } from 'antd';
 import type { GetProps } from 'antd';
 import { Input } from 'antd';
-import { TreeLayout, TreeQuizData } from '../../../../components/quizList';
+import { TreeLayout, TreeQuizData } from '../../components/quizList';
 import {
     review_roleSettingPrompt, reviewNecessityPredictionPrompt,
     reviewCommentGenerationPrompt_styleTone, reviewCommentGenerationPrompt_instruction,
     reviewCommentGenerationPrompt_restriction, reviewCommentGenerationPrompt_solution,
     reviewCommentGenerationPrompt_example
-} from '../../../../components/codeFeedbackModule';
+} from '../../components/codeFeedbackModule';
 const { TextArea } = Input;
 
 

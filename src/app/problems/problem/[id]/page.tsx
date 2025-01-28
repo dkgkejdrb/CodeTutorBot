@@ -24,13 +24,13 @@ const items: ItemType[] = [
     {
         href: '/',
         title: (<>
-            홈
+            Home
         </>)
     },
     {
         href: '/problems',
         title: (<>
-            전체 문제
+            Python Problems
         </>),
     }
 ]

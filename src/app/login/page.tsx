@@ -17,7 +17,7 @@ const items: ItemType[] = [
     {
         href: '/login',
         title: (<>
-            로그인
+            Sign in
         </>)
     }
 ]
@@ -81,7 +81,7 @@ export default function Home() {
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
             >
-                <div>아이디</div>
+                <div>ID</div>
                 <Form.Item<FieldType>
                     name="id"
                     rules={[{ required: true, message: '비어있습니다.' }]}
@@ -89,7 +89,7 @@ export default function Home() {
                     <Input></Input>
                 </Form.Item>
 
-                <div>비밀번호</div>
+                <div>Password</div>
                 <Form.Item<FieldType>
                     name="password_1"
                     rules={[{ required: true, message: '비어있습니다.' }]}
@@ -99,7 +99,7 @@ export default function Home() {
 
                 <Form.Item>
                     <Button type="primary" htmlType="submit">
-                        로그인
+                        Enter
                     </Button>
                 </Form.Item>
             </Form>

@@ -7,7 +7,7 @@ import axios from "axios";
 import { Button, Tree, Modal, Spin } from 'antd';
 import type { GetProps } from 'antd';
 import { Input } from 'antd';
-import { TreeLayout, TreeQuizData } from '../../../../components/quizList';
+import { TreeLayout, TreeQuizData } from '../../components/quizList';
 
 // 2024.04.21: 1차 시스템평가 개선 항목
 // 비어있는 코드에 대한 예외 처리 추가 *처리 완료
@@ -20,8 +20,8 @@ import {
     reviewCommentGenerationPrompt_styleTone, reviewCommentGenerationPrompt_instruction,
     reviewCommentGenerationPrompt_restriction, reviewCommentGenerationPrompt_solution,
     reviewCommentGenerationPrompt_example
-} from '../../../../components/codeFeedbackModule';
-import { answerCheckPrompt } from '../../../../components/answerCheckModule';
+} from '../../components/codeFeedbackModule';
+import { answerCheckPrompt } from '../../components/answerCheckModule';
 import { UnorderedListOutlined, BulbOutlined, CodeOutlined, RobotOutlined, LoadingOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 

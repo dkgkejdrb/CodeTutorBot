@@ -1,29 +1,29 @@
 .header {
-    border-bottom: solid 2px #eee;
+    border-bottom: solid 0.125rem #eee; /* 2px -> 0.125rem */
     width: 100%;
 }
 
 .header .topBar {
-    padding: 8px 0;
+    padding: 0.5rem 0; /* 8px -> 0.5rem */
 }
 
 .container {
-    padding-right: 15px;
-    padding-left: 15px;
+    padding-right: 1rem; /* 15px -> 1rem */
+    padding-left: 1rem; /* 15px -> 1rem */
     margin-right: auto;
     margin-left: auto;
 }
 
 .loginBar {
-    font-size: 13px;
+    font-size: 0.8125rem; /* 13px -> 0.8125rem */
     display: flex;
-    justify-content: right;
+    justify-content: flex-end; /* 'right' is not a valid value for justify-content */
 }
 
 .loginBar ul {
     display: flex;
-    margin-top: 0px;
-    margin-bottom: 0px;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .loginBar li {
@@ -32,14 +32,13 @@
 }
 
 .header .topbar-devider {
-    top: 1px;
+    top: 0.0625rem; /* 1px -> 0.0625rem */
     padding: 0;
-    font-size: 8px;
+    font-size: 0.5rem; /* 8px -> 0.5rem */
     position: relative;
-    margin: 0 9px 0 9px;
+    margin: 0 0.5625rem; /* 9px -> 0.5625rem */
     font-family: Tahoma;
-    border-right: solid 1px #bbb;
-    
+    border-right: solid 0.0625rem #bbb; /* 1px -> 0.0625rem */
 }
 
 .header .brand {
@@ -48,15 +47,17 @@
 
 .navBar .container ul {
     border-bottom: none;
-    margin-left: 300px;
+    margin-left: 18.75rem; /* 300px -> 18.75rem */
 }
 
 .navBar li {
-    min-width: 150px;
+    min-width: 9.375rem; /* 150px -> 9.375rem */
     text-align: center;
 }
 
 .navBar .ant-menu-title-content {
-    color: #687074;
-    font-size: 14px;
+    /* color: #687074; */
+    color: rgba(0, 0, 0, 0.88)!important;;
+    font-weight: 600;
+    font-size: 1.2rem!important; /* 14px -> 0.875rem */
 }

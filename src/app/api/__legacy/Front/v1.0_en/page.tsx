@@ -22,8 +22,8 @@ import {
     reviewCommentGenerationPrompt_styleTone, reviewCommentGenerationPrompt_instruction,
     reviewCommentGenerationPrompt_restriction, reviewCommentGenerationPrompt_solution,
     reviewCommentGenerationPrompt_example
-} from '../../../../components/codeFeedbackModule';
-import { answerCheckPrompt } from '../../../../components/answerCheckModule';
+} from '../../components/codeFeedbackModule';
+import { answerCheckPrompt } from '../../components/answerCheckModule';
 import { UnorderedListOutlined, BulbOutlined, CodeOutlined, RobotOutlined, LoadingOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 
