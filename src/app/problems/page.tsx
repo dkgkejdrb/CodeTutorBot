@@ -52,7 +52,6 @@ export default function Home() {
   // 페이지 진입 시, isLogin이 false라면 Home으로 이동
   useEffect(() => {
     if (!isLogin) {
-      window.alert("로그인이 필요한 서비스입니다.");
       router.push('/login');
       return;
     }
@@ -83,7 +82,7 @@ export default function Home() {
         axios.post('/api/problemsUser', { user_id:  user_id})
           .then(problemUserResponse => {
             const userProblems = problemUserResponse.data.data;
-            console.log(userProblems);
+            // console.log(userProblems);
 
             const updatedResponse = data.map((problem: any) => {
               const userProblem = 

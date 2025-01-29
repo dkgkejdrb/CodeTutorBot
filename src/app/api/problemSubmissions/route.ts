@@ -14,7 +14,11 @@ const client = new MongoClient(uri, {
 export async function POST(request: Request) {
     const content = await request.json();
     // console.log(content);
-    const createdDate = new Date();
+    const user_id = content.user_id;
+    const problem_id = content.problem_id;
+    const code = content.code;
+    const is_correct = content.is_correct;
+    const submitted_at = new Date();
 
     async function run() {
         try {
@@ -22,12 +26,19 @@ export async function POST(request: Request) {
 
             const db = client.db("codeTutor");
             const collection = db.collection("user_problems");
-            
-            // content.user_id와 content.problem_id가 있는 도큐먼트 탐색
-            const cursor = collection.find({ user_id: content.user_id });
-            const documents = await cursor.toArray();
+            const result = await collection.updateOne(
+                { user_id: user_id, problem_id: problem_id },
+                {
+                  $set: {
+                    code: code,
+                    is_correct: is_correct,
+                    submitted_at: submitted_at
+                  }
+                },
+                { upsert: true }
+              );
 
-        return NextResponse.json({ type: 'success', data: documents });
+        return NextResponse.json({ type: 'success', data: result });
     } catch (err: any) {
       return NextResponse.json({ type: 'error', message: 'error', error: err.message }, { status: 500 });
     } finally {

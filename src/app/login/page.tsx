@@ -11,6 +11,8 @@ import axios from "axios";
 import Alert from '../components/Alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { setId, setToken } from '@/store/slices/authSlice'; 
+import { useRouter } from 'next/navigation';
+
 import { RootState } from '@/store';
 
 const items: ItemType[] = [
@@ -32,6 +34,7 @@ export default function Home() {
     const[response, setResponse] = useState<resProp>();
     const isLogin = useSelector((state: RootState) => state.auth.isLogin);
 
+    const router = useRouter();
     const dispatch = useDispatch();
 
     const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
@@ -41,7 +44,7 @@ export default function Home() {
         .then(response => {
             isLoading(false);
             setResponse(response.data);
-            console.log('응답 데이터', response.data);
+            // console.log('응답 데이터', response.data);
 
             // JWT 토큰을 전역 상태로 저장
             const token = response.data.token;
@@ -66,11 +69,11 @@ export default function Home() {
             {
                 !loading && response && response.type === 'success' ?
                     (
-                        <Alert title={'🎉어서오세요!🎉'} type={'success'} message={response.message} modalOpen={true} url={'/'} />
+                        <Alert title={'🎉WELCOME!🎉'} type={'success'} message={response.message} modalOpen={true} url={'/'} />
                     )
                     : !loading && response && response.type === 'error' &&
                     (
-                        <Alert title={'실패😭'} type={'error'} message={response.message} modalOpen={true} url={''} />
+                        <Alert title={'Fail😭'} type={'error'} message={response.message} modalOpen={true} url={''} />
                     )
             }
             <Header isLogin={isLogin}/>
@@ -85,7 +88,12 @@ export default function Home() {
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
             >
-                <div>ID</div>
+                <div style={{ width: "100%", height: "80px", backgroundColor: "#eee", display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "5px", flexDirection: "column" }}>
+                    <span>💡 To access [Problems] menu,</span>
+                    <span>[Sign In] is required.</span>
+                </div>                
+
+                <div style={{ marginTop: "1.5rem" }}>ID</div>
                 <Form.Item<FieldType>
                     name="id"
                     rules={[{ required: true, message: '비어있습니다.' }]}
@@ -102,10 +110,17 @@ export default function Home() {
                 </Form.Item>
 
                 <Form.Item>
-                    <Button type="primary" htmlType="submit">
+                    <Button style={{ width: "100%" }} type="primary" htmlType="submit">
                         Enter
                     </Button>
                 </Form.Item>
+                <p
+                    // className="text-blue-600 hover:underline cursor-pointer"
+                    style={{ color: "blue", cursor: "pointer", textAlign: "center", textDecoration: "underline" }}
+                    onClick={() => router.push("/register")}
+                    >
+                    Don't have an account? Sign Up
+                </p>
             </Form>
           </div>
         </main>

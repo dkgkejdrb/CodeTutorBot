@@ -7,7 +7,7 @@ import Image from 'next/image';
 import headerLogo from '/public/LOGO.png';
 import Link from 'next/link';
 import { useDispatch } from 'react-redux';
-import { clearToken } from '@/store/slices/authSlice';
+import { clearId, clearToken } from '@/store/slices/authSlice';
 
 const navItems = [
   {
@@ -49,6 +49,7 @@ export default function Home({isLogin}:headerProps)  {
 
   const logoutHandler = () => {
     dispatch(clearToken());
+    dispatch(clearId());
   }
   return (
       <div className='header'>
@@ -76,7 +77,7 @@ export default function Home({isLogin}:headerProps)  {
                     </li>
                     <div className='topbar-devider'></div> */}
                     <li>
-                      <Link href='/' onClick={logoutHandler} style={linkSytle}>로그아웃</Link>
+                      <Link href='/' onClick={logoutHandler} style={linkSytle}>Sign out</Link>
                     </li>
                   </ul>
                 </>

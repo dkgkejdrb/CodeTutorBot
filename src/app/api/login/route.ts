@@ -46,7 +46,7 @@ const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
         );
 
         // 성공 시, 토큰과 user.id 반환
-        return NextResponse.json({ type: 'success', message: '로그인 성공', id: user.id, token });
+        return NextResponse.json({ type: 'success', message: 'Moving to Home', id: user.id, token });
       } catch (err: any) {
         return NextResponse.json({ type: 'error', message: 'error', error: err.message }, { status: 500 });
       } finally {

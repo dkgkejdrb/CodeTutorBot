@@ -11,6 +11,8 @@ import { ItemType } from '@/app/components/Breadcrumb';
 import { useRef, useEffect, useState, createContext } from 'react';
 import axios from "axios";
 import { Button, Input, Modal, Spin } from "antd";
+import { RootState } from '@/store';
+import { useSelector } from 'react-redux';
 
 const { TextArea } = Input;
 
@@ -48,6 +50,9 @@ interface problemDetailType {
 }
 
 export default function Home({ params }: Props) {
+    // 로그인한 ID
+    const user_id = useSelector((state: RootState) => state.auth.id);
+
     // Submit Code 용 로딩
     const [loading1, setLoading1] = useState(false);
 
@@ -82,9 +87,9 @@ export default function Home({ params }: Props) {
         "Perfect solution! You’re doing amazing! 🏆🎊"
     ]
     const [RCGP_response, RCGPT_setResponse] = useState<any>();
-    const [extractedComment, setExtractedComment] = useState<string>();
+    const [extractedComment, setExtractedComment] = useState<string>("# Code tutor's assistance will be displayed here.");
     useEffect(() => {
-        console.log(RCGP_response);
+        // console.log(RCGP_response);
         if (RCGP_response) {
             // 정답을 맞춰서 코드 피드백이 필요 없는 경우
             if (RCGP_response == "no_correct" || RCGP_response == "No_correct") {
@@ -229,6 +234,20 @@ export default function Home({ params }: Props) {
                 
                     setAnswerCheckData(__answerCheckData);
                 }
+                
+                // 로그인한 ID와 문제 ID를 키로하여, 코드 체점 결과, 현재 작성한 코드 DB에 저장
+                axios.post('/api/problemSubmissions', {
+                    user_id: user_id,
+                    problem_id: params.id,
+                    code: code,
+                    is_correct: acceptedCount === response1.data.submissions.length ? "Correct" : "Incorrect",
+                })
+                .then(response3 => {
+                    // console.log(response3.data);
+                })
+                .catch(error => {
+                    console.error('에러 발생:', error);
+                });
                 setLoading1(false);
             })
             .catch(error => {
@@ -415,13 +434,13 @@ export default function Home({ params }: Props) {
                                                         {/* # 체점 결과가 여기에 표시됩니다. */}
                                                         {
                                                             !loading1?
-                                                            <TextArea
-                                                            className="fade-in"
-                                                            style={{ resize: "none", height: "100%" }}
-                                                            // value={resFromShell}
-                                                            value={answerCheckData}
-                                                            readOnly
-                                                        />
+                                                                <TextArea
+                                                                    className="fade-in"
+                                                                    style={{ resize: "none", height: "100%" }}
+                                                                    // value={resFromShell}
+                                                                    value={answerCheckData}
+                                                                    readOnly
+                                                                />
                                                             :
                                                             <Spin style={{ height: "100%", width: "100%", textAlign: "center", background: "rgba(0,0,0,0.05)", display: "flex", justifyContent: "center", alignItems: "center"}} />
                                                         }
@@ -464,11 +483,11 @@ export default function Home({ params }: Props) {
                                                             loading2 ?
                                                             <Spin style={{ height: "100%", width: "100%", textAlign: "center", background: "rgba(0,0,0,0.05)", display: "flex", justifyContent: "center", alignItems: "center"}} />
                                                             :        
-                                                            !extractedComment ?
-                                                                <div style={{ paddingTop: 12, height: "calc(100% - 12px - 32px - 12px)", fontSize: 14 }}>
-                                                                    # Code tutor's assistance will be displayed here.
-                                                                </div>
-                                                            :
+                                                            // !extractedComment ?
+                                                            //     <div style={{ paddingTop: 12, height: "calc(100% - 12px - 32px - 12px)", fontSize: 14 }}>
+                                                            //         # Code tutor's assistance will be displayed here.
+                                                            //     </div>
+                                                            // :
                                                             <TextArea
                                                                 className="fade-in"
                                                                 style={{ resize: "none", height: "100%" }}
@@ -489,7 +508,7 @@ export default function Home({ params }: Props) {
                         </div>
                         <div className='bottom' style={{ width: "100%", marginTop: 12, height: 58, borderTop: "solid 2px #eee", display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
                             <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                                <Button style={{ backgroundColor: "#D7E2EB", fontWeight: 700 }}>Reset</Button>
+                                {/* <Button style={{ backgroundColor: "#D7E2EB", fontWeight: 700 }}>Reset</Button> */}
                                 <Button
                                     onClick={() => {
                                         const code = editorRef.current.getValue();
@@ -501,7 +520,7 @@ export default function Home({ params }: Props) {
                                         }
 
                                     }}
-                                    type="primary" style={{ marginLeft: 6, fontWeight: 700 }}>Submit Code</Button>
+                                    style={{ marginLeft: 6, fontWeight: 700, backgroundColor: "#D7E2EB" }}>Submit Code</Button>
                                 <Button type="primary" style={{ marginLeft: 6, marginRight: 18, fontWeight: 700 }}
                                     onClick={() => {
                                         const code = editorRef.current.getValue();
