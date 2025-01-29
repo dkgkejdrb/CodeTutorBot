@@ -9,6 +9,7 @@ const SCP_instruction = `
 Analyze the [SubmittedCode] provided by the student for the [PythonProblem]. 
 Although it passed all test cases, ensure rigorous validation beyond the test cases. 
 If the [SubmittedCode] matches any of the following criteria, respond only with the corresponding criteria items' name.
+If not, respond with "No issues found".
 `
 const SCP_criteria = `
 Unnecessary Code: Code contains elements not essential for solving the problem.

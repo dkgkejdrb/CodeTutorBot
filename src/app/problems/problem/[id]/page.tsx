@@ -72,7 +72,6 @@ export default function Home({ params }: Props) {
             });
     }, [])
 
-
     // 코드 피드백이 필요 없는 경우 출력하는 메시지들
     const cheeringMessages: string[] = [
         "Great job! Your code is clean and accurate. Well done! 🎉👍",
@@ -85,28 +84,38 @@ export default function Home({ params }: Props) {
     const [RCGP_response, RCGPT_setResponse] = useState<any>();
     const [extractedComment, setExtractedComment] = useState<string>();
     useEffect(() => {
+        console.log(RCGP_response);
         if (RCGP_response) {
-            // 코드 피드백이 필요 없는 경우
-            if (RCGP_response == "no") {
+            // 정답을 맞춰서 코드 피드백이 필요 없는 경우
+            if (RCGP_response == "no_correct" || RCGP_response == "No_correct") {
                 const randomIndex = Math.floor(Math.random() * cheeringMessages.length);
                 setExtractedComment(cheeringMessages[randomIndex]);
-                return
             }
-            const startTag_code = "[RC]";
-            const endTag_code = "[/RC]";
+            // 파이썬 문제를 해결하려는 의도가 없는 경우 (e.g., 'print()', single numbers, random characters)
+            else if (RCGP_response == "no_meaningless" || RCGP_response == "No_meaningless") {
+                setExtractedComment("Your submitted code appears to be incomplete or unclear. Please provide a more detailed attempt so I can help! 😊");
+            }
+            
+            else
+            {
+                if (loading2 === false) {
+                    const startTag_code = "[RC]";
+                    const endTag_code = "[/RC]";
 
-            const startIndex_code = RCGP_response.indexOf(startTag_code) + startTag_code.length;
-            const endIndex_code = RCGP_response.indexOf(endTag_code);
-            const extractedCode = RCGP_response.substring(startIndex_code, endIndex_code).trim();
-            setCode(extractedCode);
+                    const startIndex_code = RCGP_response.indexOf(startTag_code) + startTag_code.length;
+                    const endIndex_code = RCGP_response.indexOf(endTag_code);
+                    const extractedCode = RCGP_response.substring(startIndex_code, endIndex_code).trim();
+                    setCode(extractedCode);
 
 
-            const startTag_comment = "[R]";
-            const endTag_comment = "[/R]";
+                    const startTag_comment = "[R]";
+                    const endTag_comment = "[/R]";
 
-            const startIndex_comment = RCGP_response.indexOf(startTag_comment) + startTag_comment.length;
-            const endIndex_comment = RCGP_response.indexOf(endTag_comment);
-            setExtractedComment(RCGP_response.substring(startIndex_comment, endIndex_comment).trim());
+                    const startIndex_comment = RCGP_response.indexOf(startTag_comment) + startTag_comment.length;
+                    const endIndex_comment = RCGP_response.indexOf(endTag_comment);
+                    setExtractedComment(RCGP_response.substring(startIndex_comment, endIndex_comment).trim());
+                }
+            }
         }
     }, [loading2])
 
@@ -131,6 +140,16 @@ export default function Home({ params }: Props) {
 
     const [code, setCode] = useState<string | undefined>("");
 
+    // useEffect(() => {
+    //     console.log(code)
+
+    // }, [code]);
+
+    
+    // useEffect(() => {
+    //     console.log(loading1);
+    //  },[loading1])
+
     // 정답 결과
     const [answerCheckData, setAnswerCheckData] = useState<string>("# Execution results will be displayed here.");
     // 정답 결과 모달 팝업
@@ -146,7 +165,6 @@ export default function Home({ params }: Props) {
             memory_limit: problemDetail?.memory_limit
         })
             .then(response1 => {
-                setLoading1(false);
                 // 각 Testcase 실행결과 표시
                 const _answerCheckData = response1.data.submissions.map((submission: any, index: any) =>
                     `Test case #${index + 1} result: ${submission.status.description} (${submission.time} sec)`
@@ -211,7 +229,7 @@ export default function Home({ params }: Props) {
                 
                     setAnswerCheckData(__answerCheckData);
                 }
-
+                setLoading1(false);
             })
             .catch(error => {
                 setLoading1(false);
@@ -249,28 +267,28 @@ export default function Home({ params }: Props) {
     const ReachableContext = createContext<string | null>(null);
 
     const configSucces = {
-        title: '정답',
+        title: 'Correct',
         content: (
             <>
-                훌륭합니다!
+                Great!
             </>
         ),
     };
 
     const configFail = {
-        title: '오답',
+        title: 'Wrong',
         content: (
             <>
-                다시 한번 도전해보세요!
+                Try again!
             </>
         ),
     };
 
     const configError = {
-        title: '오류',
+        title: 'Error',
         content: (
             <>
-                코드를 제출해주세요.
+                Submit your code.
             </>
         ),
     };
@@ -328,11 +346,11 @@ export default function Home({ params }: Props) {
                                 {Array.isArray(problemDetail.stdout) &&
                                     problemDetail.stdout.map((output, index) => (
                                         <div className="__container" style={{ marginTop: 16 }} key={`output-${index}`}>
-                                            <div className="title">{`Output Example #${index + 1}`}</div>
+                                            <div className="title">{`[Output Example #${index + 1}]`}</div>
                                             <div className="resFromShell">
                                                 <TextArea
                                                     rows={3}
-                                                    style={{ resize: "none", height: "100%" }}
+                                                    style={{ marginTop: 16, resize: "none", height: "100%" }}
                                                     value={output}
                                                     readOnly
                                                 />
@@ -340,75 +358,10 @@ export default function Home({ params }: Props) {
                                         </div>
                                     ))
                                 }
-                                    {/* {
-                                        problemDetail.description &&
-                                        <div className='__container'>
-                                            <div className='title'>[Instruction]</div>
-                                            <p>
-                                                {problemDetail.description}
-                                            </p>
-                                        </div>
-                                    }
-                                    {
-                                        Array.isArray(problemDetail.stdin) && problemDetail.stdin[0] &&
-                                        <div className='__container' style={{ marginTop: 16 }}>
-                                            <div className='title'>Input Example #1</div>
-                                            <div className='resFromShell' >
-                                                <TextArea
-                                                    rows={3}
-                                                    style={{ resize: "none", height: "100%" }}
-                                                    value={problemDetail.stdin[0]}
-                                                    readOnly
-                                                />
-                                            </div>
-                                        </div>
-                                    }
-                                    {
-                                        Array.isArray(problemDetail.stdout) && problemDetail.stdout[0] &&
-                                        <div className='__container' style={{ marginTop: 16 }}>
-                                            <div className='title'>Output Example #1</div>
-                                            <div className='resFromShell' >
-                                                <TextArea
-                                                    rows={3}
-                                                    style={{ resize: "none", height: "100%" }}
-                                                    value={problemDetail.stdout[0]}
-                                                    readOnly
-                                                />
-                                            </div>
-                                        </div>
-                                    }
-                                    {
-                                        Array.isArray(problemDetail.stdin) && problemDetail.stdin[1] &&
-                                        <div className='__container' style={{ marginTop: 16 }}>
-                                            <div className='title'>Input Example #2</div>
-                                            <div className='resFromShell' >
-                                                <TextArea
-                                                    rows={3}
-                                                    style={{ resize: "none", height: "100%" }}
-                                                    value={problemDetail.stdin[1]}
-                                                    readOnly
-                                                />
-                                            </div>
-                                        </div>
-                                    }
-                                    {
-                                        Array.isArray(problemDetail.stdout) && problemDetail.stdout[1] &&
-                                        <div className='__container' style={{ marginTop: 16 }}>
-                                            <div className='title'>Output Example #2</div>
-                                            <div className='resFromShell' >
-                                                <TextArea
-                                                    rows={3}
-                                                    style={{ resize: "none", height: "100%" }}
-                                                    value={problemDetail.stdout[1]}
-                                                    readOnly
-                                                />
-                                            </div>
-                                        </div>
-                                    } */}
                                     {
                                         problemDetail.hint &&
                                         <div className='__container bottom' style={{ marginTop: 16 }}>
-                                            <div className='title'>힌트</div>
+                                            <div className='title'>[Hint]</div>
                                             <p>
                                                 {problemDetail.hint}
                                             </p>
@@ -417,7 +370,7 @@ export default function Home({ params }: Props) {
                                     {
                                         problemDetail.cpu_time_limit &&
                                         <div className='__container bottom' style={{ marginTop: 16 }}>
-                                            <div className='title'>Time Limit</div>
+                                            <div className='title'>[Time Limit]</div>
                                             <p>
                                                 {problemDetail.cpu_time_limit} sec
                                             </p>
@@ -426,7 +379,7 @@ export default function Home({ params }: Props) {
                                     {
                                         problemDetail.memory_limit &&
                                         <div className='__container bottom' style={{ marginTop: 16 }}>
-                                            <div className='title'>Memory Limit</div>
+                                            <div className='title'>[Memory Limit]</div>
                                             <p>
                                                 {problemDetail.memory_limit} byte
                                             </p>
@@ -463,6 +416,7 @@ export default function Home({ params }: Props) {
                                                         {
                                                             !loading1?
                                                             <TextArea
+                                                            className="fade-in"
                                                             style={{ resize: "none", height: "100%" }}
                                                             // value={resFromShell}
                                                             value={answerCheckData}
@@ -483,7 +437,7 @@ export default function Home({ params }: Props) {
                                                         {/* <RobotOutlined /> */}
                                                         <div style={{ marginLeft: 8 }}>👩🏻‍🏫 Code Tutor</div>
                                                     </div>
-                                                    {
+                                                    {/* {
                                                         !extractedComment ?
                                                             <div style={{ paddingTop: 12, height: "calc(100% - 12px - 32px - 12px)", fontSize: 14 }}>
                                                                 # Code tutor's assistance will be displayed here.
@@ -503,6 +457,27 @@ export default function Home({ params }: Props) {
                                                                 }
                                                                 
                                                             </div>
+                                                    } */}
+                                                    {
+                                                        <div className='resFromShell' style={{ paddingTop: 12, height: "calc(100% - 12px - 32px - 12px)", fontSize: 14 }}>
+                                                        {
+                                                            loading2 ?
+                                                            <Spin style={{ height: "100%", width: "100%", textAlign: "center", background: "rgba(0,0,0,0.05)", display: "flex", justifyContent: "center", alignItems: "center"}} />
+                                                            :        
+                                                            !extractedComment ?
+                                                                <div style={{ paddingTop: 12, height: "calc(100% - 12px - 32px - 12px)", fontSize: 14 }}>
+                                                                    # Code tutor's assistance will be displayed here.
+                                                                </div>
+                                                            :
+                                                            <TextArea
+                                                                className="fade-in"
+                                                                style={{ resize: "none", height: "100%" }}
+                                                                value={extractedComment}
+                                                                readOnly
+                                                            />
+                                                        }                                               
+                                                        </div>
+
                                                     }
 
                                                 </div>
@@ -517,22 +492,27 @@ export default function Home({ params }: Props) {
                                 <Button style={{ backgroundColor: "#D7E2EB", fontWeight: 700 }}>Reset</Button>
                                 <Button
                                     onClick={() => {
-                                        setLoading1(true);
+                                        const code = editorRef.current.getValue();
+                                        if (codeValidation(code) === true) {
+                                            modal.warning(configError);
+                                        }
+                                        if (codeValidation(code) === false) {
+                                            codeAnswerCheck();
+                                        }
+
+                                    }}
+                                    type="primary" style={{ marginLeft: 6, fontWeight: 700 }}>Submit Code</Button>
+                                <Button type="primary" style={{ marginLeft: 6, marginRight: 18, fontWeight: 700 }}
+                                    onClick={() => {
                                         const code = editorRef.current.getValue();
                                         if (codeValidation(code) === true) {
                                             modal.warning(configError);
                                             setLoading1(false);
                                         }
                                         if (codeValidation(code) === false) {
-                                            
-                                            codeAnswerCheck();
-                                            setLoading1(false);
+                                            codeReviewRequest();
                                         }
-
                                     }}
-                                    type="primary" style={{ marginLeft: 6, fontWeight: 700 }}>Submit Code</Button>
-                                <Button type="primary" style={{ marginLeft: 6, fontWeight: 700 }}
-                                    onClick={codeReviewRequest}
                                 >
                                     Ask Code Tutor
                                 </Button>

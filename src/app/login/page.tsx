@@ -10,7 +10,7 @@ import { resProp } from '../components/Alert';
 import axios from "axios";
 import Alert from '../components/Alert';
 import { useDispatch, useSelector } from 'react-redux';
-import { setToken } from '@/store/slices/authSlice'; 
+import { setId, setToken } from '@/store/slices/authSlice'; 
 import { RootState } from '@/store';
 
 const items: ItemType[] = [
@@ -46,6 +46,10 @@ export default function Home() {
             // JWT 토큰을 전역 상태로 저장
             const token = response.data.token;
             dispatch(setToken(token));
+
+            // ID를 전역 상태로 저장
+            const id = values.id;
+            dispatch(setId(id));
         })
         .catch(error => {
             isLoading(false);

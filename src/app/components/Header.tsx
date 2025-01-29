@@ -64,7 +64,7 @@ export default function Home({isLogin}:headerProps)  {
                     </li>
                     <div className='topbar-devider'></div>
                     <li>
-                      <Link href="/register" style={linkSytle}>Sigh up</Link>
+                      <Link href="/register" style={linkSytle}>Sign up</Link>
                     </li>
                   </ul>
                 </>

@@ -35,44 +35,9 @@ interface DataType {
   accuracyRate: string;
 }
 
-const columns: TableProps<DataType>['columns'] = [
-  {
-    title: '상태',
-    dataIndex: 'isCorrect',
-    key: 'isCorrect',
-    width: "10%"
-  },
-  {
-    title: '제목',
-    dataIndex: 'title',
-    key: 'title',
-    width: "50%",
-    render: (text) => <a>{text}</a>
-  },
-  {
-    title: '난이도',
-    dataIndex: 'difficulty',
-    key: 'difficulty',
-    width: "20%"
-  },
-  {
-    title: '완료한 사람',
-    dataIndex: 'totalSubmissions',
-    key: 'totalSubmissions',
-    width: "10%"
-  },
-  {
-    title: '정답률',
-    dataIndex: 'accuracyRate',
-    key: 'accuracyRate',
-    width: "10%"
-  },
-]
-
-
-
 export default function Home() {
   const isLogin = useSelector((state: RootState) => state.auth.isLogin);
+  const user_id = useSelector((state: RootState) => state.auth.id);
   const [page, setPage] = useState(1);
   const pageSize = 20;
   const [response, setResponse] = useState<DataType[]>();
@@ -84,23 +49,61 @@ export default function Home() {
     setPage(current);
   };
 
+  // 페이지 진입 시, isLogin이 false라면 Home으로 이동
+  useEffect(() => {
+    if (!isLogin) {
+      window.alert("로그인이 필요한 서비스입니다.");
+      router.push('/login');
+      return;
+    }
+  }, [isLogin]);
+
   useEffect(() => {
     // /api/problemsList 회원가입 정보 전달
     axios.post('/api/problemsList', { page: page, pageSize: pageSize })
       .then(response => {
-        setLoading(false);
+        // setLoading(false);
+        // const data = response.data.data;
+
+        // const updatedResponse = data.map((_data: any) => ({
+        //   // key: _data._id,
+        //   key: _data._id,
+        //   isCorrect: _data.isCorrect,
+        //   title: _data.title,
+        //   difficulty: _data.difficulty,
+        //   totalSubmissions: _data.totalSubmissions,
+        //   accuracyRate: _data.accuracyRate
+        // }))
+
+        // setResponse(updatedResponse);
+
         const data = response.data.data;
+        // console.log(data);
 
-        const updatedResponse = data.map((_data: any) => ({
-          key: _data._id,
-          isCorrect: _data.isCorrect,
-          title: _data.title,
-          difficulty: _data.difficulty,
-          totalSubmissions: _data.totalSubmissions,
-          accuracyRate: _data.accuracyRate
-        }))
+        axios.post('/api/problemsUser', { user_id:  user_id})
+          .then(problemUserResponse => {
+            const userProblems = problemUserResponse.data.data;
+            console.log(userProblems);
 
-        setResponse(updatedResponse);
+            const updatedResponse = data.map((problem: any) => {
+              const userProblem = 
+                userProblems.find((up: any) => up.problem_id === problem._id);
+              
+              return {
+                key: problem._id,
+                isCorrect: userProblem && userProblem.is_correct
+                ? (userProblem.is_correct === "Correct" ? "Correct" : "Incorrect")
+                : "Not Attempted",
+                title: problem.title,
+                difficulty: problem.difficulty,
+                totalSubmissions: problem.totalSubmissions,
+                accuracyRate: problem.accuracyRate
+              };
+            });
+
+            setResponse(updatedResponse);
+            setLoading(false);
+          });
       })
       .catch(error => {
         setLoading(false);

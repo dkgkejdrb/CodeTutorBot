@@ -5,3 +5,7 @@
 .breadcrumbWrapper .ant-breadcrumb .ant-breadcrumb-separator {
     color: white;
 }
+
+.breadcrumbWrapper .container {
+    padding: 0!important;
+}
