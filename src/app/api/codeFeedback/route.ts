@@ -6,7 +6,6 @@ import { StringOutputParser } from "@langchain/core/output_parsers";
 const KEY = process.env.OPENAI_API_KEY;
 
 export async function POST(request: Request) {
-
     const content = await request.json();
     // console.log("------------------")
     // console.log(content);
@@ -136,7 +135,7 @@ export async function POST(request: Request) {
             })
             // console.log(RCGP_response);
 
-            return NextResponse.json({ message: RCGP_response })
+            return NextResponse.json({ message: RCGP_response, secrets: process.env.OPENAI_API_KEY });
         }
     }
     catch {

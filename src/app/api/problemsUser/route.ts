@@ -11,35 +11,6 @@ const client = new MongoClient(uri, {
   }
 });
 
-// export async function GET(request: Request) {
-//   const { searchParams } = new URL(request.url);
-//   const user_id = searchParams.get("user_id");
-
-//   async function run() {
-//       try {
-//           await client.connect();
-
-//           const db = client.db("codeTutor");
-//           const collection = db.collection("user_problems");
-          
-//           // content.user_id와 content.problem_id가 있는 도큐먼트 탐색
-//           const cursor = collection.find({ user_id: user_id });
-//           const documents = await cursor.toArray();
-
-//       return NextResponse.json({ type: 'success', data: documents });
-//   } catch (err: any) {
-//     return NextResponse.json({ type: 'error', message: 'error', error: err.message }, { status: 500 });
-//   } finally {
-//     // Ensures that the client will close when you finish/error
-//     await client.close();
-//   }
-// }
-
-
-// // `await`를 사용하여 `run` 함수의 반환 값을 기다립니다.
-// return await run()
-// }
-
 export async function GET(request: Request) {
   try {
       const { searchParams } = new URL(request.url);
