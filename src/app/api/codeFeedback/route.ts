@@ -66,7 +66,7 @@ export async function POST(request: Request) {
         // RNP 응답 결과에 따라 RCGP 체인 실행
         if (RNP_response == "no_meaningless" || RNP_response == "No_meaningless"
             || RNP_response == "no_correct" || RNP_response == "No_correct"
-        ) return NextResponse.json({ message: RNP_response });
+        ) return NextResponse.json({ message: RNP_response, secrets: process.env.OPENAI_API_KEY });
         else if (RNP_response == "Yes" || RNP_response == "yes") {
 
             // RCGP 모델 셋팅
@@ -135,10 +135,10 @@ export async function POST(request: Request) {
             })
             // console.log(RCGP_response);
 
-            return NextResponse.json({ message: RCGP_response, secrets: process.env.OPENAI_API_KEY });
+            return NextResponse.json({ message: RCGP_response });
         }
     }
     catch {
-        return NextResponse.json({ error: "Failed to evaluate necessity" });
+        return NextResponse.json({ error: "Failed to evaluate necessity", secrets: process.env.OPENAI_API_KEY });
     }
 }

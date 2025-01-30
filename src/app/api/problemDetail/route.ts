@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-// const uri = process.env.MONGODB_URI;
-const uri = "mongodb+srv://dkgkejdrb:Vkdnjf8710@cluster0.zjhaf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const uri = process.env.MONGODB_URI;
+// const uri = "mongodb+srv://dkgkejdrb:Vkdnjf8710@cluster0.zjhaf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 const client = new MongoClient(uri, {
   serverApi: {

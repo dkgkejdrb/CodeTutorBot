@@ -40,7 +40,7 @@ export async function POST(request: Request) {
       //   fields: '*'
     },
     headers: {
-      'x-rapidapi-key': 'f54a007339msh4a1a11a38459fe9p1d7d8fjsn67f89e4444c0',
+      'x-rapidapi-key': KEY,
       'x-rapidapi-host': 'judge0-ce.p.rapidapi.com',
       'Content-Type': 'application/json'
     },
@@ -66,7 +66,7 @@ export async function POST(request: Request) {
         fields: '*'
       },
       headers: {
-        'x-rapidapi-key': 'f54a007339msh4a1a11a38459fe9p1d7d8fjsn67f89e4444c0',
+        'x-rapidapi-key': KEY,
         'x-rapidapi-host': 'judge0-ce.p.rapidapi.com'
       }
     };
