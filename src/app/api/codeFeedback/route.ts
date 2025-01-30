@@ -13,46 +13,6 @@ export async function POST(request: Request) {
     // console.log("------------------")
 
     try {
-        // // CVP 모델 셋팅
-        // const CVP_Model = new ChatOpenAI({
-        //     openAIApiKey: KEY,
-        //     model: "gpt-4o-mini",
-        //     // model: "gpt-4o",
-        //     temperature: 0.2, // 변경 전 1
-        //     maxTokens: 50, // 변경 전 520
-        //     topP: 0.1, // 변경 전 1
-        //     frequencyPenalty: 0,
-        //     presencePenalty: 0,
-        // });
-
-        
-        // // CVP 프롬프트 생성
-        // const CVP_Prompt = ChatPromptTemplate.fromMessages([
-        //     ["system", "You are a code reviewer who validate whether the shubmitted code is meaningful."],
-        //     ["user",
-        //         `
-        //         If [SubmittedCode] consists only of meaningless outputs like 'print()', random numbers, or arbitrary letters, just respond with:
-        //         [R] Your submitted code appears to be incomplete or unclear. Please provide a more detailed attempt so I can help! 😊 [/R]
-        //         If not, respond with 'yes'.
-
-        //         Submitted Code: {submittedCode}
-        //         `
-        //     ]
-        // ]);
-
-        // // CVP 체인 생성, outputparser 응답 결과만 추출
-        // const CVP_chain = CVP_Prompt.pipe(CVP_Model).pipe(new StringOutputParser());
-
-        // // CVP 체인 invoke
-        // const CVP_response = await CVP_chain.invoke({
-        //     submittedCode: content.code
-        // })
-        // console.log(CVP_response);
-
-        // // CVP 응답 결과에 따라 RNP 체인 실행
-        // if (CVP_response != "yes" && CVP_response != "Yes") {
-        //     return NextResponse.json({ message: CVP_response });
-        // }
 
         // RNP 모델 셋팅
         const RNP_Model = new ChatOpenAI({
