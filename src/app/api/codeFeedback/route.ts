@@ -3,8 +3,8 @@ import { ChatOpenAI } from "@langchain/openai";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 
-// const KEY = process.env.OPENAI_API_KEY;
-const KEY = "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";
+const KEY = process.env.OPENAI_API_KEY;
+
 
 export async function POST(request: Request) {
 
