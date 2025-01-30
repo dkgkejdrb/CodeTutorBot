@@ -3,7 +3,6 @@ import { NextResponse } from 'next/server';
 const axios = require('axios')
 
 const KEY = process.env.X_RAPIDAPI_KEY;
-const URL = process.env.JUDGE0_URL;
 
 const createSubmissions = (data: any) => {
   // stdin이 존재하는 경우와 존재하지 않는 경우 분기 처리
