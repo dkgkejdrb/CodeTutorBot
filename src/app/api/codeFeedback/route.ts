@@ -3,16 +3,17 @@ import { ChatOpenAI } from "@langchain/openai";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 
-const KEY = process.env.OPENAI_API_KEY;
+// const KEY = process.env.OPENAI_API_KEY;
+const KEY = "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";
 
 export async function POST(request: Request) {
+
     const content = await request.json();
     // console.log("------------------")
     // console.log(content);
     // console.log("------------------")
 
     try {
-
         // RNP 모델 셋팅
         const RNP_Model = new ChatOpenAI({
             openAIApiKey: KEY,
@@ -66,7 +67,7 @@ export async function POST(request: Request) {
         // RNP 응답 결과에 따라 RCGP 체인 실행
         if (RNP_response == "no_meaningless" || RNP_response == "No_meaningless"
             || RNP_response == "no_correct" || RNP_response == "No_correct"
-        ) return NextResponse.json({ message: RNP_response, secrets: process.env.OPENAI_API_KEY });
+        ) return NextResponse.json({ message: RNP_response });
         else if (RNP_response == "Yes" || RNP_response == "yes") {
 
             // RCGP 모델 셋팅
@@ -135,10 +136,10 @@ export async function POST(request: Request) {
             })
             // console.log(RCGP_response);
 
-            return NextResponse.json({ message: RCGP_response });
+            return NextResponse.json({ message: RCGP_response })
         }
     }
     catch {
-        return NextResponse.json({ error: "Failed to evaluate necessity", secrets: process.env.OPENAI_API_KEY });
+        return NextResponse.json({ error: "Failed to evaluate necessity" });
     }
 }
