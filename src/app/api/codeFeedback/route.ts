@@ -139,7 +139,8 @@ export async function POST(request: Request) {
             return NextResponse.json({ message: RCGP_response })
         }
     }
-    catch {
-        return NextResponse.json({ error: "Failed to evaluate necessity" });
+    catch (error) {
+        // console.error("🔥 Error occurred:", error);
+        return NextResponse.json({ error: error });
     }
 }
