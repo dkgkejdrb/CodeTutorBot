@@ -46,8 +46,36 @@ export async function POST(request: Request) {
       await client.close();
     }
   }
-
-
   // `await`를 사용하여 `run` 함수의 반환 값을 기다립니다.
   return await run()
+}
+
+export async function GET(request: Request) {
+    try {
+      const { searchParams } = new URL(request.url);
+      const user_id = searchParams.get("user_id");
+      const problem_id = searchParams.get("problem_id");
+
+      if (!user_id || !problem_id) {
+          return NextResponse.json({ type: 'error', message: 'Missing user_id or problem_id' }, { status: 400 });
+      }
+
+      await client.connect();
+
+      const db = client.db("codeTutor");
+      const collection = db.collection("user_problems");
+
+      const result = await collection.findOne({ user_id: user_id, problem_id: problem_id });
+
+      if (!result) {
+          return NextResponse.json({ type: 'error', message: 'Document not found' }, { status: 404 });
+      }
+
+      return NextResponse.json({ type: 'success', data: result });
+
+  } catch (err: any) {
+      return NextResponse.json({ type: 'error', message: 'Database query failed', error: err.message }, { status: 500 });
+  } finally {
+      await client.close();
+  }
 }

@@ -79,30 +79,66 @@ export default function Home() {
         const data = response.data.data;
         // console.log(data);
 
-        axios.post('/api/problemsUser', { user_id:  user_id})
-          .then(problemUserResponse => {
-            const userProblems = problemUserResponse.data.data;
-            // console.log(userProblems);
+        // axios.get('/api/problemsUser', { 
+        //   params: {
+        //     user_id:  user_id
+        //   }
+        // })
+        //   .then(problemUserResponse => {
+        //     const userProblems = problemUserResponse.data.data;
+        //     // console.log(userProblems);
 
-            const updatedResponse = data.map((problem: any) => {
-              const userProblem = 
-                userProblems.find((up: any) => up.problem_id === problem._id);
+        //     const updatedResponse = data.map((problem: any) => {
+        //       const userProblem = 
+        //         userProblems.find((up: any) => up.problem_id === problem._id);
               
-              return {
-                key: problem._id,
-                isCorrect: userProblem && userProblem.is_correct
-                ? (userProblem.is_correct === "Correct" ? "Correct" : "Incorrect")
-                : "Not Attempted",
-                title: problem.title,
-                difficulty: problem.difficulty,
-                totalSubmissions: problem.totalSubmissions,
-                accuracyRate: problem.accuracyRate
-              };
-            });
+        //       return {
+        //         key: problem._id,
+        //         isCorrect: userProblem && userProblem.is_correct
+        //         ? (userProblem.is_correct === "Correct" ? "Correct" : "Incorrect")
+        //         : "Not Attempted",
+        //         title: problem.title,
+        //         difficulty: problem.difficulty,
+        //         totalSubmissions: problem.totalSubmissions,
+        //         accuracyRate: problem.accuracyRate
+        //       };
+        //     });
 
-            setResponse(updatedResponse);
-            setLoading(false);
+        //     setResponse(updatedResponse);
+        //     setLoading(false);
+        //   });
+
+
+      axios.get('/api/problemsUser', { 
+        params: { user_id: user_id }
+      })
+      .then(problemUserResponse => {
+          const userProblems = problemUserResponse.data.userProblems;
+          const problemStats = problemUserResponse.data.problemStats;
+          
+          const updatedResponse = data.map((problem: any) => {
+              const userProblem = userProblems.find((up: any) => up.problem_id === problem._id);
+              const stats = problemStats[problem._id] || { totalSubmissions: 0, accuracyRate: "0.00%" };
+      
+              return {
+                  key: problem._id,
+                  isCorrect: userProblem && userProblem.is_correct
+                      ? (userProblem.is_correct === "Correct" ? "Correct" : "Incorrect")
+                      : "Not Attempted",
+                  title: problem.title,
+                  difficulty: problem.difficulty,
+                  totalSubmissions: stats.totalSubmissions,
+                  accuracyRate: stats.accuracyRate
+              };
           });
+      
+          setResponse(updatedResponse);
+          setLoading(false);
+      })
+      .catch(error => {
+          console.error('에러 발생:', error);
+      });
+      
       })
       .catch(error => {
         setLoading(false);
@@ -154,7 +190,7 @@ export default function Home() {
               }
             }}
           />
-          <Column title="Difficulty" dataIndex="difficulty" key="difficulty" width="20%" />
+          {/* <Column title="Difficulty" dataIndex="difficulty" key="difficulty" width="20%" /> */}
           <Column title="Total Submissions" dataIndex="totalSubmissions" key="totalSubmissions" width="10%" />
           <Column title="Accuracy Rate" dataIndex="accuracyRate" key="accuracyRate" width="10%" />
         </Table>

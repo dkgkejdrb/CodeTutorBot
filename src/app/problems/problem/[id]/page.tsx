@@ -13,6 +13,7 @@ import axios from "axios";
 import { Button, Input, Modal, Spin } from "antd";
 import { RootState } from '@/store';
 import { useSelector } from 'react-redux';
+import { useRouter } from 'next/navigation';
 
 const { TextArea } = Input;
 
@@ -50,6 +51,16 @@ interface problemDetailType {
 }
 
 export default function Home({ params }: Props) {
+    // 페이지 진입 시, isLogin이 false라면 Home으로 이동
+    const router = useRouter();
+    const isLogin = useSelector((state: RootState) => state.auth.isLogin);
+    useEffect(() => {
+        if (!isLogin) {
+            router.push('/login');
+            return;
+        }
+    }, [isLogin]);
+
     // 로그인한 ID
     const user_id = useSelector((state: RootState) => state.auth.id);
 
@@ -59,6 +70,7 @@ export default function Home({ params }: Props) {
     // Code Tutor 용 로딩
     const [loading2, setLoading2] = useState(false);
 
+    // 문제 세부사항 가져오기
     const [problemDetail, setProblemDetail] = useState<problemDetailType>();
     useEffect(() => {
         setLoading1(true);
@@ -70,6 +82,22 @@ export default function Home({ params }: Props) {
 
                 setProblemDetail(response.data);
                 // console.log('응답 데이터', response.data);
+
+                //  로그인한 ID와 문제 ID를 키로하여, 코드 체점 결과, 현재 작성한 코드 DB에 저장
+                axios.get('/api/problemSubmissions', {
+                    params: {
+                        user_id: user_id,
+                        problem_id: params.id,
+                    }
+                })
+                .then(response3 => {
+                    // console.log(response3.data);
+                    setCode(response3.data.data.code);
+                    // console.log(response3.data.data.code);
+                })
+                .catch(error => {
+                    console.error('에러 발생:', error);
+                });
             })
             .catch(error => {
                 setLoading1(false);
@@ -272,6 +300,20 @@ export default function Home({ params }: Props) {
                 const codeReview = response.data.message;
                 // 코드 피드백이 필요 없는 경우
                 RCGPT_setResponse(codeReview);
+                
+                // 로그인한 ID와 문제 ID를 키로하여, 현재 작성한 코드와 코드리뷰를 DB에 저장
+                axios.post('/api/problemCodeReviews', {
+                    user_id: user_id,
+                    problem_id: params.id,
+                    code: code,
+                    code_review: codeReview,
+                })
+                .then(response3 => {
+                    // console.log(response3.data);
+                })
+                .catch(error => {
+                    console.error('에러 발생:', error);
+                });
                 // console.log(codeReview);
             })
             .catch(error => {
@@ -456,27 +498,6 @@ export default function Home({ params }: Props) {
                                                         {/* <RobotOutlined /> */}
                                                         <div style={{ marginLeft: 8 }}>👩🏻‍🏫 Code Tutor</div>
                                                     </div>
-                                                    {/* {
-                                                        !extractedComment ?
-                                                            <div style={{ paddingTop: 12, height: "calc(100% - 12px - 32px - 12px)", fontSize: 14 }}>
-                                                                # Code tutor's assistance will be displayed here.
-                                                            </div>
-                                                            :
-                                                            <div className='resFromShell' style={{ paddingTop: 12, height: "calc(100% - 12px - 32px - 12px)", fontSize: 14 }}>
-                                                                {
-                                                                    loading2 ?
-                                                                    <Spin style={{ height: "100%", width: "100%", textAlign: "center", background: "rgba(0,0,0,0.05)", display: "flex", justifyContent: "center", alignItems: "center"}} />
-                                                                    :                                                          
-                                                                    <TextArea
-                                                                        style={{ resize: "none", height: "100%" }}
-                                                                        value={extractedComment}
-                                                                        readOnly
-                                                                    />
-
-                                                                }
-                                                                
-                                                            </div>
-                                                    } */}
                                                     {
                                                         <div className='resFromShell' style={{ paddingTop: 12, height: "calc(100% - 12px - 32px - 12px)", fontSize: 14 }}>
                                                         {
