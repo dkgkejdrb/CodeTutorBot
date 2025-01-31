@@ -53,7 +53,7 @@ export default function Home() {
         <section className="usage-guide" style={{ marginTop: '45px' }}>
           <h2>시스템 사용법</h2>
           <p>아래 영상을 통해 AI 코드 리뷰 시스템을 사용하는 방법을 확인하세요!</p>
-          <iframe width="560" height="315" src="https://www.youtube.com/embed/IdpB4Ic_wxQ?si=ysDhaOqQcJt7s7PN" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/IdpB4Ic_wxQ?si=ysDhaOqQcJt7s7PN" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
         </section>
 
 
