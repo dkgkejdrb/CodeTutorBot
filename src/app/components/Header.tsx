@@ -42,9 +42,10 @@ textDecorationLine: "none", color: "#7c8082"
 
 interface headerProps {
   isLogin: boolean;
+  user_id: string | null;
 }
 
-export default function Home({isLogin}:headerProps)  {
+export default function Home({isLogin, user_id}:headerProps)  {
   const dispatch = useDispatch();
 
   const logoutHandler = () => {
@@ -72,12 +73,20 @@ export default function Home({isLogin}:headerProps)  {
                 :
                 <>
                   <ul>
+                    <div style={{marginRight: '10px'}}>
+                      {`Hi, ${user_id}`}
+                    </div>
+                    <div style={{marginRight: '10px'}}>
+                      {`|`}
+                    </div>
                     {/* <li>
                       <Link href="/register" style={linkSytle}>My page</Link>
                     </li>
                     <div className='topbar-devider'></div> */}
                     <li>
-                      <Link href='/' onClick={logoutHandler} style={linkSytle}>Sign out</Link>
+                      <Link href='/' onClick={logoutHandler} style={linkSytle}>
+                        {`Sign out`}
+                      </Link>
                     </li>
                   </ul>
                 </>

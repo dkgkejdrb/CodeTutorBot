@@ -33,6 +33,7 @@ export default function Home() {
     const[loading, isLoading] = useState(false);
     const[response, setResponse] = useState<resProp>();
     const isLogin = useSelector((state: RootState) => state.auth.isLogin);
+    const user_id = useSelector((state: RootState) => state.auth.id);
 
     const router = useRouter();
     const dispatch = useDispatch();
@@ -76,7 +77,7 @@ export default function Home() {
                         <Alert title={'Fail😭'} type={'error'} message={response.message} modalOpen={true} url={''} />
                     )
             }
-            <Header isLogin={isLogin}/>
+            <Header isLogin={isLogin} user_id={user_id}/>
             <Breadcrumb items={items} />
             
             <div className='container' style={{ display: "flex", justifyContent: "center", paddingTop: 40 }}>

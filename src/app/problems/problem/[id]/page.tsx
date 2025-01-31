@@ -215,11 +215,11 @@ export default function Home({ params }: Props) {
             .then(response1 => {
 
                 // 각 Testcase 실행결과 표시
-                const tableHeader = `TC | Status | Time | Memory\n------------------------------------\n`;
+                const tableHeader = `TC | Status | Time | Memory\n`;
                 const _answerCheckData = response1.data.submissions.map((submission: any, index: any) =>
                     
                     // `Test case #${index + 1} result: ${submission.status.description} (${submission.time} sec)`
-                    `#${index + 1} | ${submission.status.description} | ${submission.time} sec | ${submission.memory} byte\n------------------------------------`
+                    `#${index + 1} | ${submission.status.description} | ${submission.time} sec | ${submission.memory} byte`
                 ).join('\n');
 
                 // console.log(response.data.submissions[0].source_code);
@@ -337,6 +337,7 @@ export default function Home({ params }: Props) {
                     problem_id: params.id,
                     code: code,
                     code_review: codeReview,
+                    is_correct: isCorrectAnswer
                 })
                 .then(response3 => {
                     // console.log(response3.data);

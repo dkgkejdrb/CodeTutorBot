@@ -152,7 +152,7 @@ export default function Home() {
 
   return (
     <main>
-      <Header isLogin={isLogin} />
+      <Header isLogin={isLogin} user_id={user_id}/>
       <Breadcrumb items={items} />
       {/* <div className='problems container' style={{ paddingTop: 40 }}>
         <div className='searchBar' style={{ display: "flex" }}>

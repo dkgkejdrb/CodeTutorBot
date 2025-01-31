@@ -12,7 +12,7 @@ export default function Home() {
   // const isLogin = useSelector((state: RootState) => state.authSlice.isLogin);
   // const token = useSelector((state: RootState) => state.authSlice.token);
   const isLogin = useSelector((state: RootState) => state.auth.isLogin);
-  const token = useSelector((state: RootState) => state.auth.token);
+  const user_id = useSelector((state: RootState) => state.auth.id);
 
   // useEffect(()=>{
   //   console.log(isLogin);
@@ -21,7 +21,7 @@ export default function Home() {
 
   return (
     <main className="w-full flex flex-col justify-center items-center">
-      <Header isLogin={isLogin}/>
+      <Header isLogin={isLogin} user_id={user_id}/>
       {/* <div className="w-full">
         <div className="container mx-auto md lg xl">
           <Carousel arrows infinite={true} autoplay>

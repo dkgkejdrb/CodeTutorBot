@@ -18,6 +18,7 @@ export async function POST(request: Request) {
     const problem_id = content.problem_id;
     const code = content.code;
     const code_review = content.code_review;
+    const is_correct = content.is_correct;
     const submitted_at = new Date();
 
     async function run() {
@@ -32,7 +33,8 @@ export async function POST(request: Request) {
                     problem_id: problem_id,
                     code: code,
                     code_review: code_review,
-                    submitted_at: submitted_at
+                    submitted_at: submitted_at,
+                    is_correct: is_correct
                 }
               );
 
