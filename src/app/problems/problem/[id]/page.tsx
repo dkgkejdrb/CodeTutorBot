@@ -10,7 +10,7 @@ import Breadcrumb from './Breadcrumb';
 import { ItemType } from '@/app/components/Breadcrumb';
 import { useRef, useEffect, useState, createContext } from 'react';
 import axios from "axios";
-import { Button, Input, Modal, Spin } from "antd";
+import { Button, Input, Modal, Spin, Skeleton } from "antd";
 import { RootState } from '@/store';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
@@ -67,23 +67,39 @@ export default function Home({ params }: Props) {
     // Submit Code 용 로딩
     const [loading1, setLoading1] = useState(false);
 
+    // // Submit 3초 이내 잦은 실행 방지
+    // const [countdown, setCountdown] = useState<number | null>(null);
+    // useEffect(() => {
+    //     if (countdown === null) return;
+    
+    //     if (countdown === 0) {
+    //         setCountdown(null);
+    //     } else {
+    //         const timer = setTimeout(() => {
+    //             setCountdown(prevCountdown => (prevCountdown !== null ? prevCountdown - 1 : null));
+    //         }, 1000);
+    
+    //         return () => clearTimeout(timer);
+    //     }
+    // }, [countdown]); 
+
     // Code Tutor 용 로딩
     const [loading2, setLoading2] = useState(false);
 
     // 문제 세부사항 가져오기
     const [problemDetail, setProblemDetail] = useState<problemDetailType>();
+
+    // 유저가 작성한 코드 가져올 때 로딩
     useEffect(() => {
-        setLoading1(true);
         axios.post('/api/problemDetail', { _id: params.id })
             // 로그인 성공
             .then(response => {
                 // console.log(response.data);
-                setLoading1(false);
 
                 setProblemDetail(response.data);
                 // console.log('응답 데이터', response.data);
 
-                //  로그인한 ID와 문제 ID를 키로하여, 코드 체점 결과, 현재 작성한 코드 DB에 저장
+                //  로그인한 ID와 문제 ID를 키로하여 유저가 작성한 코드 불러오기
                 axios.get('/api/problemSubmissions', {
                     params: {
                         user_id: user_id,
@@ -100,7 +116,6 @@ export default function Home({ params }: Props) {
                 });
             })
             .catch(error => {
-                setLoading1(false);
                 // console.error('에러 발생:', error);
             });
     }, [])
@@ -186,7 +201,7 @@ export default function Home({ params }: Props) {
     // 정답 결과
     const [answerCheckData, setAnswerCheckData] = useState<string>("# Execution results will be displayed here.");
     // 정답 결과 모달 팝업
-    const [isCorrectAnswer, setIsCorrectAnswer] = useState<boolean>();
+    const [isCorrectAnswer, setIsCorrectAnswer] = useState<boolean | null>();
 
     const codeAnswerCheck = () => {
         setLoading1(true);
@@ -198,9 +213,13 @@ export default function Home({ params }: Props) {
             memory_limit: problemDetail?.memory_limit
         })
             .then(response1 => {
+
                 // 각 Testcase 실행결과 표시
+                const tableHeader = `TC | Status | Time | Memory\n------------------------------------\n`;
                 const _answerCheckData = response1.data.submissions.map((submission: any, index: any) =>
-                    `Test case #${index + 1} result: ${submission.status.description} (${submission.time} sec)`
+                    
+                    // `Test case #${index + 1} result: ${submission.status.description} (${submission.time} sec)`
+                    `#${index + 1} | ${submission.status.description} | ${submission.time} sec | ${submission.memory} byte\n------------------------------------`
                 ).join('\n');
 
                 // console.log(response.data.submissions[0].source_code);
@@ -222,6 +241,8 @@ export default function Home({ params }: Props) {
                         .then(response2 => {
                         // 결과 추가
                         const __answerCheckData =
+                            tableHeader
+                            +
                             _answerCheckData 
                             +
                             (response2.data.message ? `\n\nCode Tutor Check 👩🏻‍🏫 : ` + response2.data.message : "")
@@ -240,15 +261,20 @@ export default function Home({ params }: Props) {
                             }
 
                             // 결과 반환
+                            // setIsCorrectAnswer(null); // 같은 채점 결과여도 계속 모달 팝업이 뜨도록 설정
                             setAnswerCheckData(__answerCheckData);
+                            setLoading1(false);
                         })
                         .catch(error => {
                             console.error('에러 발생:', error);
+                            setLoading1(false);
                         });
                 }
                 // 만약 오답이라면 TEST CASE만 그대로 반환
                 else {
                     const __answerCheckData =
+                    tableHeader
+                    +
                     _answerCheckData +
                     `\n===\n\nOverall result: ` +
                     (acceptedCount === response1.data.submissions.length ? "Correct 👍" : "Wrong 😅");
@@ -260,7 +286,9 @@ export default function Home({ params }: Props) {
                         setIsCorrectAnswer(false);
                     }
                 
+                    // setIsCorrectAnswer(null); // 같은 채점 결과여도 계속 모달 팝업이 뜨도록 설정
                     setAnswerCheckData(__answerCheckData);
+                    setLoading1(false);
                 }
                 
                 // 로그인한 ID와 문제 ID를 키로하여, 코드 체점 결과, 현재 작성한 코드 DB에 저장
@@ -276,12 +304,13 @@ export default function Home({ params }: Props) {
                 .catch(error => {
                     console.error('에러 발생:', error);
                 });
-                setLoading1(false);
+                // setLoading1(false);
             })
             .catch(error => {
                 setLoading1(false);
                 console.error('에러 발생:', error);
             });
+            setIsCorrectAnswer(null);
     }
 
 
@@ -293,6 +322,7 @@ export default function Home({ params }: Props) {
 
     const codeReviewRequest = () => {
         setLoading2(true);
+
         // ★ 나중에 실제 작성한 코드와 솔루션으로 변경되게 바꿔야 함
         axios.post('/api/codeFeedback', { pythonProblem: problemDetail?.description, code: code, solution: problemDetail?.solution })
             .then(response => {
@@ -387,11 +417,44 @@ export default function Home({ params }: Props) {
                                         </div>
                                     )
                                 }
+                                {Array.isArray(problemDetail.stdin) && Array.isArray(problemDetail.stdout) &&
+                                    problemDetail.stdin.map((input, index) => (
+                                        <div key={`example-${index}`}>
+                                            {/* Input Example */}
+                                            <div className="__container" style={{ marginTop: 16 }}>
+                                                <div className="title">{`[Input Example #${index + 1}]`}</div>
+                                                <div className="resFromShell">
+                                                    <TextArea
+                                                        rows={3}
+                                                        style={{ resize: "none", height: "100%" }}
+                                                        value={input}
+                                                        readOnly
+                                                    />
+                                                </div>
+                                            </div>
 
-                                {Array.isArray(problemDetail.stdin) &&
+                                            {/* Output Example */}
+                                            {problemDetail.stdout[index] !== undefined && (
+                                                <div className="__container" style={{ marginTop: 16 }}>
+                                                    <div className="title">{`[Output Example #${index + 1}]`}</div>
+                                                    <div className="resFromShell">
+                                                        <TextArea
+                                                            rows={3}
+                                                            style={{ marginTop: 16, resize: "none", height: "100%" }}
+                                                            value={problemDetail.stdout[index]}
+                                                            readOnly
+                                                        />
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))
+                                }
+
+                                {/* {Array.isArray(problemDetail.stdin) &&
                                     problemDetail.stdin.map((input, index) => (
                                         <div className="__container" style={{ marginTop: 16 }} key={`input-${index}`}>
-                                            <div className="title">{`Input Example #${index + 1}`}</div>
+                                            <div className="title">{`[Input Example #${index + 1}]`}</div>
                                             <div className="resFromShell">
                                                 <TextArea
                                                     rows={3}
@@ -418,7 +481,7 @@ export default function Home({ params }: Props) {
                                             </div>
                                         </div>
                                     ))
-                                }
+                                } */}
                                     {
                                         problemDetail.hint &&
                                         <div className='__container bottom' style={{ marginTop: 16 }}>
@@ -452,7 +515,8 @@ export default function Home({ params }: Props) {
                                         <div className='title' style={{ paddingBottom: 12 }}>Your Code</div>
                                     </div>
                                     <div className="editorWrapper">
-                                        <Editor
+                                        {
+                                            <Editor
                                             // width="480px"
                                             height="100%"
                                             language="python"
@@ -466,8 +530,10 @@ export default function Home({ params }: Props) {
                                             onChange={(e) => { setCode(e); }}
                                             onMount={hadleEditorDidMount}
                                         />
+                                        }
+
                                     </div>
-                                    <div style={{ paddingLeft: 12, backgroundColor: "#FBFBFD", display: "flex", justifyContent: "space-between", width: "100%", height: "calc(45% - 52px)" }}>
+                                    <div style={{ paddingLeft: 12, backgroundColor: "#FBFBFD", display: "flex", justifyContent: "space-between", width: "100%", height: "calc(50% - 52px)" }}>
                                         <div style={{ borderTop: "solid 2px #eee", width: "100%", display: "flex" }}>
                                             <div style={{ display: "flex", width: "calc(50% - 6px)", height: "100%" }}>
                                                 <div style={{ width: "100%", height: "100%", paddingTop: 12 }}>
@@ -531,6 +597,7 @@ export default function Home({ params }: Props) {
                             <div style={{ display: "flex", justifyContent: "flex-end" }}>
                                 {/* <Button style={{ backgroundColor: "#D7E2EB", fontWeight: 700 }}>Reset</Button> */}
                                 <Button
+                                    disabled={loading1}
                                     onClick={() => {
                                         const code = editorRef.current.getValue();
                                         if (codeValidation(code) === true) {
@@ -541,8 +608,12 @@ export default function Home({ params }: Props) {
                                         }
 
                                     }}
-                                    style={{ marginLeft: 6, fontWeight: 700, backgroundColor: "#D7E2EB" }}>Submit Code</Button>
+                                    style={{ marginLeft: 6, fontWeight: 700, backgroundColor: "#D7E2EB" }}>
+                                        {/* {countdown !== null ? `Wait ${countdown}s` : 'Submit Code Review'} */}
+                                        Submit Code
+                                </Button>
                                 <Button type="primary" style={{ marginLeft: 6, marginRight: 18, fontWeight: 700 }}
+                                    disabled={loading2}
                                     onClick={() => {
                                         const code = editorRef.current.getValue();
                                         if (codeValidation(code) === true) {

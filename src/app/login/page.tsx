@@ -110,7 +110,7 @@ export default function Home() {
                 </Form.Item>
 
                 <Form.Item>
-                    <Button style={{ width: "100%" }} type="primary" htmlType="submit">
+                    <Button loading={loading} style={{ width: "100%" }} type="primary" htmlType="submit">
                         Enter
                     </Button>
                 </Form.Item>

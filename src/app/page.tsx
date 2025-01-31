@@ -34,50 +34,39 @@ export default function Home() {
         </Carousel>
         </div>
       </div> */}
-      <section className="w-full bg-gray-100 py-8">
-        <div className="container mx-auto px-4 md:px-8 lg:px-16 xl:px-24">
-          <h2 className="text-2xl font-bold text-center mb-4">시스템 소개</h2>
-          <p className="text-center text-gray-700">
-            저희 시스템은 사용자들이 다양한 문제를 풀고, 자신의 실력을 향상시킬 수 있도록 도와줍니다. 
-            다양한 문제와 해설을 통해 학습을 더욱 효과적으로 할 수 있습니다.
-          </p>
-        </div>
-      </section>
-      <section className="w-full py-8">
-        <div className="container mx-auto px-4 md:px-8 lg:px-16 xl:px-24">
-          <h2 className="text-2xl font-bold text-center mb-4">공지사항</h2>
-          <ul className="list-disc list-inside text-gray-700">
-            <li>메인 배너 테스트 기간: 2024년 1월 1일 ~ 2024년 1월 31일</li>
-            <li>새로운 문제 추가: 2024년 2월 1일</li>
-            <li>시스템 업데이트 예정: 2024년 3월 1일</li>
-          </ul>
-        </div>
-      </section>
-      <section className="w-full bg-gray-100 py-8">
-        <div className="container mx-auto px-4 md:px-8 lg:px-16 xl:px-24">
-          <h2 className="text-2xl font-bold text-center mb-4">사용자 리뷰</h2>
-          <div className="flex flex-wrap justify-center">
-            <div className="w-full md:w-1/2 lg:w-1/3 p-4">
-              <div className="bg-white p-6 rounded-lg shadow-lg">
-                <p className="text-gray-700">"이 시스템 덕분에 많은 것을 배웠습니다!"</p>
-                <p className="text-gray-500 text-sm mt-2">- 사용자 A</p>
-              </div>
-            </div>
-            <div className="w-full md:w-1/2 lg:w-1/3 p-4">
-              <div className="bg-white p-6 rounded-lg shadow-lg">
-                <p className="text-gray-700">"문제가 다양하고 해설이 잘 되어 있어요."</p>
-                <p className="text-gray-500 text-sm mt-2">- 사용자 B</p>
-              </div>
-            </div>
-            <div className="w-full md:w-1/2 lg:w-1/3 p-4">
-              <div className="bg-white p-6 rounded-lg shadow-lg">
-                <p className="text-gray-700">"매일 새로운 문제를 풀 수 있어서 좋아요."</p>
-                <p className="text-gray-500 text-sm mt-2">- 사용자 C</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <div className='container flex flex-col test-description'>
+
+          <h1 style={{ textAlign: 'center' }}>사용성 테스트에 참여해주셔서 감사합니다.</h1>
+          <h1 style={{ textAlign: 'center' }}>아래 내용들을 살펴보시고 사용성 테스트에 참여해주세요.</h1>
+        <section className="research-summary" style={{ marginTop: '20px' }}>
+          <h2>연구 개요</h2>
+          <p>본 시스템은 기존 온라인 저지 시스템과 LLM을 결합하여 AI 코드 리뷰 및 엄격한 채점 기능을 제공하는 것이 특징입니다.</p>
+        </section>
+
+        <section className="study-details" style={{ marginTop: '45px' }}>
+          <h2>연구 진행 안내</h2>
+          <p>📅 <strong>테스트 기간:</strong> 2025.02.06 ~ 2025.02.13</p>
+          <p>🕒 <strong>평균 소요 시간:</strong> 60±25분</p>
+          <p>🎯 <strong>참여 대상:</strong> Python 기초 문법 경험이 있는 초·중등 학생 (총 20명)</p>
+        </section>
+        
+        <section className="usage-guide" style={{ marginTop: '45px' }}>
+          <h2>시스템 사용법</h2>
+          <p>아래 영상을 통해 AI 코드 리뷰 시스템을 사용하는 방법을 확인하세요!</p>
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/IdpB4Ic_wxQ?si=ysDhaOqQcJt7s7PN" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </section>
+
+
+        <section className="contact" style={{ marginTop: '45px' }}>
+          <h2>연구 책임자 & 문의</h2>
+          <p><strong>이동규 (Mark)</strong> - 한양대학교 M&A Lab 연구원, D.LAB 연구원</p>
+          <p>📞 <strong>연락처:</strong> 010-8393-9101</p>
+          <p>🏢 <strong>연구실 위치:</strong> 한양대학교 산학기술관 714호</p>
+        </section>
+
+      </div>
+
+
     </main>
   );
 }

@@ -11,6 +11,10 @@ body {
   height: 100%;
 }
 
+.test-description {
+  color: rgba(0, 0, 0, 0.4);
+}
+
 main {
   width: 100%;
   display: flex;
