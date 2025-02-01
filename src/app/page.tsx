@@ -5,10 +5,11 @@
 import Header from '../app/components/Header';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import { usePathname } from 'next/navigation';
-import { useDispatch } from 'react-redux';
-import { setIsGlobalLoading } from '@/store/slices/authSlice';
-import { useEffect } from 'react';
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { usePathname } from "next/navigation";
+import { setIsGlobalLoading } from "@/store/slices/authSlice";
+import  GlobalLoading from '../app/components/GlobalLoading';
 // import Image from 'next/image';
 
 export default function Home() {
@@ -17,28 +18,23 @@ export default function Home() {
   const isLogin = useSelector((state: RootState) => state.auth.isLogin);
   const user_id = useSelector((state: RootState) => state.auth.id);
 
-  // 전역 로딩 페이지
+  // 전역 로딩 관련
   const pathname = usePathname();
   const isGlobalLoading = useSelector((state: RootState) => state.auth.isGlobalLoading);
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     dispatch(setIsGlobalLoading(true));
+    // 페이지 이동 후 0.5초 후 로딩 종료 (원래 코드 주석 처리됨)
     const timeout = setTimeout(() => {
       dispatch(setIsGlobalLoading(false));
-    }, 500); // 페이지 이동 후 0.5초 후 로딩 종료
+    }, 500);
     return () => clearTimeout(timeout);
-  }, [pathname]);
+  }, [pathname, dispatch]);
 
-    // 🔥 로딩 중일 때 화면 중앙에 "Loading..." 표시
-    if (isGlobalLoading) {
-      return (
-        <div className="fixed inset-0 flex items-center justify-center bg-white">
-          <h1 className="text-2xl font-bold">Loading...</h1>
-        </div>
-      );
-    }
-  // ... 전역 로딩 페이지
+  if (isGlobalLoading) 
+    return <GlobalLoading />;
+  // ... 전역 로딩 관련
 
   // useEffect(()=>{
   //   console.log(isLogin);

@@ -14,6 +14,11 @@ import Breadcrumb from '@/app/components/Breadcrumb';
 import { useState, useEffect } from 'react';
 import axios from "axios";
 import { useRouter } from 'next/navigation';
+import { useDispatch } from "react-redux";
+import { usePathname } from "next/navigation";
+import { setIsGlobalLoading } from "@/store/slices/authSlice";
+import  GlobalLoading from '../../app/components/GlobalLoading';
+
 const { Column } = Table;
 
 const items: ItemType[] = [
@@ -148,6 +153,25 @@ export default function Home() {
   // useEffect(()=>{
   //   console.log(response);
   // },[response])
+
+    // 전역 로딩 관련
+    const pathname = usePathname();
+    const isGlobalLoading = useSelector((state: RootState) => state.auth.isGlobalLoading);
+    const dispatch = useDispatch();
+  
+    useEffect(() => {
+      dispatch(setIsGlobalLoading(true));
+      // 페이지 이동 후 0.5초 후 로딩 종료 (원래 코드 주석 처리됨)
+      const timeout = setTimeout(() => {
+        dispatch(setIsGlobalLoading(false));
+      }, 500);
+      return () => clearTimeout(timeout);
+    }, [pathname, dispatch]);
+  
+    if (isGlobalLoading) 
+      return <GlobalLoading />;
+    // ... 전역 로딩 관련
+  
 
   return (
     <main>
