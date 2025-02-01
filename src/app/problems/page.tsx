@@ -168,8 +168,9 @@ export default function Home() {
       return () => clearTimeout(timeout);
     }, [pathname, dispatch]);
   
-    if (isGlobalLoading) 
+    if (isGlobalLoading) {
       return <GlobalLoading />;
+    }
     // ... 전역 로딩 관련
   
 

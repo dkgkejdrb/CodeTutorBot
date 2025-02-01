@@ -14,6 +14,10 @@ import { Button, Input, Modal, Spin  } from "antd";
 import { RootState } from '@/store';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
+import { useDispatch } from "react-redux";
+import { usePathname } from "next/navigation";
+import { setIsGlobalLoading } from "@/store/slices/authSlice";
+import  GlobalLoading from '../../../../app/components/GlobalLoading';
 
 const { TextArea } = Input;
 
@@ -159,9 +163,17 @@ export default function Home({ params }: Props) {
                     const startTag_comment = "[R]";
                     const endTag_comment = "[/R]";
 
+                    // const startIndex_comment = RCGP_response.indexOf(startTag_comment) + startTag_comment.length;
+                    // const endIndex_comment = RCGP_response.indexOf(endTag_comment);
+                    // setExtractedComment(RCGP_response.substring(startIndex_comment, endIndex_comment).trim());
                     const startIndex_comment = RCGP_response.indexOf(startTag_comment) + startTag_comment.length;
                     const endIndex_comment = RCGP_response.indexOf(endTag_comment);
-                    setExtractedComment(RCGP_response.substring(startIndex_comment, endIndex_comment).trim());
+                
+                    const extractedComment = endIndex_comment !== -1 
+                        ? RCGP_response.substring(startIndex_comment, endIndex_comment).trim() 
+                        : RCGP_response.substring(startIndex_comment).trim();
+                    
+                    setExtractedComment(extractedComment);
                 }
             }
         }
@@ -394,6 +406,25 @@ export default function Home({ params }: Props) {
             modal.error(configFail);
         }
     }, [isCorrectAnswer])
+
+    // 전역 로딩 관련
+    const pathname = usePathname();
+    const isGlobalLoading = useSelector((state: RootState) => state.auth.isGlobalLoading);
+    const dispatch = useDispatch();
+  
+    useEffect(() => {
+      dispatch(setIsGlobalLoading(true));
+      // 페이지 이동 후 0.5초 후 로딩 종료 (원래 코드 주석 처리됨)
+      const timeout = setTimeout(() => {
+        dispatch(setIsGlobalLoading(false));
+      }, 500);
+      return () => clearTimeout(timeout);
+    }, [pathname, dispatch]);
+  
+    if (isGlobalLoading) {
+      return <GlobalLoading />;
+    }
+    // ... 전역 로딩 관련
 
     return (
         <div className='problemPage'>
