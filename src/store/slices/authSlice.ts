@@ -4,12 +4,14 @@ interface AuthState {
     token: string | null;
     isLogin: boolean;
     id: string | null;
+    isGlobalLoading: boolean;
 }
 
 const initialState: AuthState = {
     token: null,
     isLogin: false,
-    id: null
+    id: null,
+    isGlobalLoading: false
 }
 
 const authSlice = createSlice({
@@ -29,10 +31,13 @@ const authSlice = createSlice({
         },
         clearId(state) {
             state.id = null;
+        },
+        setIsGlobalLoading(state, action: PayloadAction<boolean>) {
+            state.isGlobalLoading = action.payload;
         }
     }
 })
 
-export const { setToken, clearToken, setId, clearId } = authSlice.actions;
+export const { setToken, clearToken, setId, clearId, setIsGlobalLoading } = authSlice.actions;
 
 export default authSlice.reducer;

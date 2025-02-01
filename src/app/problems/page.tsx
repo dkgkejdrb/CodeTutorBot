@@ -1,21 +1,20 @@
 // 비회원 이더라도 문제 페이지의 문제를 볼 수 있음. 단, 문제를 제출할 수는 없음
 "use client";
 
-import { SearchOutlined } from '@ant-design/icons';
 import Header from '../components/Header';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import { Button, Input, Select, Table, Pagination } from "antd";
-import type { TableProps } from 'antd';
+import { 
+  Table, 
+} from "antd";
+// import type { TableProps } from 'antd';
 import type { PaginationProps } from 'antd';
 import { ItemType } from '@/app/components/Breadcrumb';
 import Breadcrumb from '@/app/components/Breadcrumb';
 import { useState, useEffect } from 'react';
 import axios from "axios";
 import { useRouter } from 'next/navigation';
-const { Column, ColumnGroup } = Table;
-
-const { Option } = Select;
+const { Column } = Table;
 
 const items: ItemType[] = [
   {

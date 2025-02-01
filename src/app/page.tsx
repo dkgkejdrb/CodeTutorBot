@@ -1,18 +1,44 @@
 // 2024.08.06: 랜딩 페이지
 "use client";
 
-import { Carousel } from 'antd';
+// import { Carousel } from 'antd';
 import Header from '../app/components/Header';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
+import { usePathname } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { setIsGlobalLoading } from '@/store/slices/authSlice';
 import { useEffect } from 'react';
-import Image from 'next/image';
+// import Image from 'next/image';
 
 export default function Home() {
   // const isLogin = useSelector((state: RootState) => state.authSlice.isLogin);
   // const token = useSelector((state: RootState) => state.authSlice.token);
   const isLogin = useSelector((state: RootState) => state.auth.isLogin);
   const user_id = useSelector((state: RootState) => state.auth.id);
+
+  // 전역 로딩 페이지
+  const pathname = usePathname();
+  const isGlobalLoading = useSelector((state: RootState) => state.auth.isGlobalLoading);
+  const dispatch = useDispatch();
+  
+  useEffect(() => {
+    dispatch(setIsGlobalLoading(true));
+    const timeout = setTimeout(() => {
+      dispatch(setIsGlobalLoading(false));
+    }, 500); // 페이지 이동 후 0.5초 후 로딩 종료
+    return () => clearTimeout(timeout);
+  }, [pathname]);
+
+    // 🔥 로딩 중일 때 화면 중앙에 "Loading..." 표시
+    if (isGlobalLoading) {
+      return (
+        <div className="fixed inset-0 flex items-center justify-center bg-white">
+          <h1 className="text-2xl font-bold">Loading...</h1>
+        </div>
+      );
+    }
+  // ... 전역 로딩 페이지
 
   // useEffect(()=>{
   //   console.log(isLogin);
@@ -53,7 +79,7 @@ export default function Home() {
         <section className="usage-guide" style={{ marginTop: '45px' }}>
           <h2>시스템 사용법</h2>
           <p>아래 영상을 통해 AI 코드 리뷰 시스템을 사용하는 방법을 확인하세요!</p>
-          <iframe width="560" height="315" src="https://www.youtube.com/embed/IdpB4Ic_wxQ?si=ysDhaOqQcJt7s7PN" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
+          <iframe loading='lazy' width="560" height="315" src="https://www.youtube.com/embed/IdpB4Ic_wxQ?si=ysDhaOqQcJt7s7PN" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
         </section>
 
 

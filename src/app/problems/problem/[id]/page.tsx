@@ -10,7 +10,7 @@ import Breadcrumb from './Breadcrumb';
 import { ItemType } from '@/app/components/Breadcrumb';
 import { useRef, useEffect, useState, createContext } from 'react';
 import axios from "axios";
-import { Button, Input, Modal, Spin, Skeleton } from "antd";
+import { Button, Input, Modal, Spin  } from "antd";
 import { RootState } from '@/store';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
@@ -414,42 +414,93 @@ export default function Home({ params }: Props) {
                                     problemDetail.description && (
                                         <div className="__container">
                                             <div className="title">[Instruction]</div>
-                                            <p>{problemDetail.description}</p>
+                                            {/* <p>{problemDetail.description}</p> */}
+                                            <div className="resFromShell" style={{ marginTop: 16 }}>
+                                                <TextArea
+                                                    rows={6}
+                                                    style={{ resize: "none", height: "100%", paddingLeft: "0px" }}
+                                                    value={problemDetail.description}
+                                                    readOnly
+                                                />
+                                            </div>
                                         </div>
                                     )
                                 }
-                                {Array.isArray(problemDetail.stdin) && Array.isArray(problemDetail.stdout) &&
-                                    problemDetail.stdin.map((input, index) => (
-                                        <div key={`example-${index}`}>
-                                            {/* Input Example */}
-                                            <div className="__container" style={{ marginTop: 16 }}>
-                                                <div className="title">{`[Input Example #${index + 1}]`}</div>
-                                                <div className="resFromShell">
-                                                    <TextArea
-                                                        rows={3}
-                                                        style={{ resize: "none", height: "100%" }}
-                                                        value={input}
-                                                        readOnly
-                                                    />
-                                                </div>
-                                            </div>
+                                {(Array.isArray(problemDetail.stdin) || Array.isArray(problemDetail.stdout)) && 
+                                    (() => {
+                                        const maxExamples = Math.max(
+                                            problemDetail.stdin?.length || 0, 
+                                            problemDetail.stdout?.length || 0
+                                        );
 
-                                            {/* Output Example */}
-                                            {problemDetail.stdout[index] !== undefined && (
-                                                <div className="__container" style={{ marginTop: 16 }}>
-                                                    <div className="title">{`[Output Example #${index + 1}]`}</div>
-                                                    <div className="resFromShell">
-                                                        <TextArea
-                                                            rows={3}
-                                                            style={{ marginTop: 16, resize: "none", height: "100%" }}
-                                                            value={problemDetail.stdout[index]}
-                                                            readOnly
-                                                        />
+                                        return Array.from({ length: maxExamples }).map((_, index) => (
+                                            <div key={`example-${index}`}>
+                                                {/* Input Example (Only Render if Exists) */}
+                                                {Array.isArray(problemDetail.stdin) && problemDetail.stdin[index] !== undefined && (
+                                                    <div className="__container" style={{ marginTop: 16 }}>
+                                                        <div className="title">{`[Input Example #${index + 1}]`}</div>
+                                                        <div className="resFromShell">
+                                                            <TextArea
+                                                                rows={3}
+                                                                style={{ resize: "none", height: "100%", paddingLeft: "0px" }}
+                                                                value={problemDetail.stdin[index]}
+                                                                readOnly
+                                                            />
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    ))
+                                                )}
+
+                                                {/* Output Example (Only Render if Exists) */}
+                                                {Array.isArray(problemDetail.stdout) && problemDetail.stdout[index] !== undefined && (
+                                                    <div className="__container" style={{ marginTop: 16 }}>
+                                                        <div className="title">{`[Output Example #${index + 1}]`}</div>
+                                                        <div className="resFromShell">
+                                                            <TextArea
+                                                                rows={3}
+                                                                style={{ marginTop: 16, resize: "none", height: "100%", paddingLeft: "0px" }}
+                                                                value={problemDetail.stdout[index]}
+                                                                readOnly
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ));
+                                    })()
+                                }
+                                {
+                                // Array.isArray(problemDetail.stdin) && Array.isArray(problemDetail.stdout) &&
+                                //     problemDetail.stdin.map((input, index) => (
+                                //         <div key={`example-${index}`}>
+                                //             {/* Input Example */}
+                                //             <div className="__container" style={{ marginTop: 16 }}>
+                                //                 <div className="title">{`[Input Example #${index + 1}]`}</div>
+                                //                 <div className="resFromShell">
+                                //                     <TextArea
+                                //                         rows={3}
+                                //                         style={{ resize: "none", height: "100%" }}
+                                //                         value={input}
+                                //                         readOnly
+                                //                     />
+                                //                 </div>
+                                //             </div>
+
+                                //             {/* Output Example */}
+                                //             {problemDetail.stdout[index] !== undefined && (
+                                //                 <div className="__container" style={{ marginTop: 16 }}>
+                                //                     <div className="title">{`[Output Example #${index + 1}]`}</div>
+                                //                     <div className="resFromShell">
+                                //                         <TextArea
+                                //                             rows={3}
+                                //                             style={{ marginTop: 16, resize: "none", height: "100%" }}
+                                //                             value={problemDetail.stdout[index]}
+                                //                             readOnly
+                                //                         />
+                                //                     </div>
+                                //                 </div>
+                                //             )}
+                                //         </div>
+                                //     ))
                                 }
 
                                 {/* {Array.isArray(problemDetail.stdin) &&
