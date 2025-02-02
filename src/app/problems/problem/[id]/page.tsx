@@ -225,16 +225,27 @@ export default function Home({ params }: Props) {
             memory_limit: problemDetail?.memory_limit
         })
             .then(response1 => {
+                // // 각 Testcase 코드 실행결과(Input, Expected Output, Your Output) 표시
+                // const expectOutputEachTestcase = response1.data.submissions.map((submission: any, index: any) => 
+                //     `${submission.stdout}`
+                // ).join('\n');
 
-                // 각 Testcase 실행결과 표시
-                const tableHeader = `TC | Status | Time | Memory\n`;
-                const _answerCheckData = response1.data.submissions.map((submission: any, index: any) =>
+                // // 각 Testcase 실행결과 표시
+                // const tableHeader = `\nTC | Status | Time | Memory\n`;
+                // const _answerCheckData = response1.data.submissions.map((submission: any, index: any) =>
                     
-                    // `Test case #${index + 1} result: ${submission.status.description} (${submission.time} sec)`
-                    `#${index + 1} | ${submission.status.description} | ${submission.time} sec | ${submission.memory} byte`
-                ).join('\n');
+                //     // `Test case #${index + 1} result: ${submission.status.description} (${submission.time} sec)`
+                //     `#${index + 1} | ${submission.status.description} | ${submission.time} sec | ${submission.memory} byte`
+                // ).join('\n');
 
-                // console.log(response.data.submissions[0].source_code);
+                // // console.log(response.data.submissions[0].source_code);
+                // console.log(response1.data.submissions);
+                const _answerCheckData = response1.data.submissions.map((submission: any, index: any) =>
+                    // `Test case #${index + 1} result: ${submission.status.description} (${submission.time} sec)`
+                    `Test case #${index + 1}:\nResult => ${submission.status.description == "Processing" ? "Please Wait for 5sec": submission.status.description} | ${submission.time} sec | ${submission.memory} byte\nYour Output => ${submission.stdout ? submission.stdout : "None ❌"}`
+                )
+                .join('\n\n')
+                ;
 
 
                 // "Accepted"의 개수를 계산
@@ -253,15 +264,25 @@ export default function Home({ params }: Props) {
                         .then(response2 => {
                         // 결과 추가
                         const __answerCheckData =
-                            tableHeader
+                            // expectOutputEachTestcase
+                            // +
+                            // tableHeader
+                            // +
+                            `Overall Result: `
+                            +
+                            (acceptedCount === response1.data.submissions.length ? "Correct 👍" : "Wrong 😅")
+                            +
+                            (response2.data.message ? `\nCode Tutor Check 👩🏻‍🏫 : ` + response2.data.message : "")
+                            +
+                            `\n===\n\n`
                             +
                             _answerCheckData 
-                            +
-                            (response2.data.message ? `\n\nCode Tutor Check 👩🏻‍🏫 : ` + response2.data.message : "")
-                            +
-                            `\n===\n\nOverall result: `
-                            +
-                            (acceptedCount === response1.data.submissions.length ? "Correct 👍" : "Wrong 😅") ;
+                            // +
+                            // (response2.data.message ? `\nCode Tutor Check 👩🏻‍🏫 : ` + response2.data.message : "")
+                            // +
+                            // `\n===\n\nOverall Result: `
+                            // +
+                            // (acceptedCount === response1.data.submissions.length ? "Correct 👍" : "Wrong 😅") ;
                             // console.log(response2.data.message);
 
 
@@ -285,11 +306,20 @@ export default function Home({ params }: Props) {
                 // 만약 오답이라면 TEST CASE만 그대로 반환
                 else {
                     const __answerCheckData =
-                    tableHeader
+                    `Overall Result: `
                     +
-                    _answerCheckData +
-                    `\n===\n\nOverall result: ` +
-                    (acceptedCount === response1.data.submissions.length ? "Correct 👍" : "Wrong 😅");
+                    (acceptedCount === response1.data.submissions.length ? "Correct 👍" : "Wrong 😅")
+                    +
+                    `\n===\n\n`
+                    +
+                    _answerCheckData
+                    // // expectOutputEachTestcase
+                    // // +
+                    // // tableHeader
+                    // // +
+                    // _answerCheckData +
+                    // `\n===\n\nOverall result: ` +
+                    // (acceptedCount === response1.data.submissions.length ? "Correct 👍" : "Wrong 😅");
 
                     // 전체 정답 결과가 Correct => True, 그렇지 않으면 => False
                     if (acceptedCount === response1.data.submissions.length) {

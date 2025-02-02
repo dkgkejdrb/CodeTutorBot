@@ -74,6 +74,13 @@ export async function POST(request: Request) {
     try {
       const response = await axios.request(option_get_submission);
 
+      // Base64로 인코딩된 stdout을 디코딩하여 UTF-8 문자열로 변환
+      response.data.submissions.forEach((submission: any) => {
+        if (submission.stdout) {
+          submission.stdout = Buffer.from(submission.stdout, 'base64').toString('utf-8');
+        }
+      });
+
       // console.log(response.data);
       return NextResponse.json(response.data);
 
