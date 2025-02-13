@@ -1,0 +1,107 @@
+@media (min-width: 768px) {
+    .problemPage .container {
+        width: 750px;
+    }
+  }
+  
+  @media (min-width: 992px) {
+    .problemPage .container {
+        width: 970px;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .problemPage .container {
+        width: 1180px;
+    }
+  }
+
+  @media (min-width: 1920px) {
+    .problemPage .container {
+        width: 1820px;
+    }
+  }
+
+.problemPage {
+  height: 100%;
+}
+
+.problemPage ._problemPage {
+  height: 100%;
+}
+
+.problemPage ._problemPage .container_ {
+  height: calc(100% - 120px)
+}
+
+.problemPage ._problemPage .container_ ._container{
+  display: flex;
+  height: 100%;
+}
+
+.problemPage ._problemPage .container_ ._container .left {
+  height: 100%;
+  width: calc(40% - 12px);
+  padding: 12px 12px 0px 0px;
+  border-right: solid 2px #eee
+}
+
+.problemPage ._problemPage .container_ ._container .right {
+  height: 100%;
+  padding: 12px 0px 0px 0px;
+  width: 60%;
+  /* background-color: purple; */
+}
+
+.problemPage ._problemPage .container_ ._container .right .editorWrapper {
+  margin-top: 16px;
+  height: 50%;
+}
+
+.problemPage .container_ {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.problemPage .container_ .__container {
+  display: flex;
+  flex-direction: column;
+  border-bottom: solid 2px #eee;
+}
+
+.problemPage .container_ .__container.bottom {
+  display: flex;
+  flex-direction: column;
+  border-bottom: none;
+}
+
+.problemPage .container_ .title {
+  font-weight: 700;
+  color: #263747
+}
+
+.problemPage .container_ .__container p{
+  line-height: 1.8;
+  word-wrap: break-word;
+}
+
+
+.problemPage .container_ .right .monaco-editor {
+  /* margin: 10px 10px 0px 10px!important; */
+  /* border: 1px solid #2c4168!important; */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 1.5s ease-in-out;
+}

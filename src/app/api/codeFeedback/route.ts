@@ -30,13 +30,6 @@ export async function POST(request: Request) {
         const RNP_Prompt = ChatPromptTemplate.fromMessages([
             ["system", "You are a code reviewer who evaluates whether a review is necessary."],
             ["user",
-                // `
-                // Before reviewing the [SubmittedCode], determine whether it is meaningful.
-                // Based on the [PythonProblem], [SubmittedCode] and [Solution], respond with 'yes' if a code review is needed or 'no' if not.
-                // PythonProblem: {pythonProblem}
-                // Submitted Code: {submittedCode}
-                // Solution: {solution}
-                // `
                 `
                 Before reviewing the [SubmittedCode], determine whether a review is necessary.
                 
