@@ -18,6 +18,7 @@ import { useDispatch } from "react-redux";
 import { usePathname } from "next/navigation";
 import { setIsGlobalLoading } from "@/store/slices/authSlice";
 import  GlobalLoading from '../../../components/GlobalLoading';
+import Timer from '../../../components/Timer';
 
 const { TextArea } = Input;
 
@@ -70,6 +71,23 @@ export default function Home({ params }: Props) {
 
     // Submit Code 용 로딩
     const [loading1, setLoading1] = useState(false);
+
+        // 타이머 모듈
+        const [time, setTime] = useState(0)
+
+        useEffect(() => {
+            let interval: any
+            if (loading1) {
+                interval = setInterval(() => {
+                    setTime((prevTime) => prevTime + 1)
+                }, 10)
+            } else {
+                clearInterval(interval)
+            }
+    
+            return () => clearInterval(interval)
+        }, [loading1])
+        // ... 타이머 모듈
 
     // // Submit 3초 이내 잦은 실행 방지
     // const [countdown, setCountdown] = useState<number | null>(null);
@@ -456,6 +474,9 @@ export default function Home({ params }: Props) {
     }
     // ... 전역 로딩 관련
 
+    
+
+
     return (
         <div className='problemPage'>
             <>
@@ -709,9 +730,13 @@ export default function Home({ params }: Props) {
                         <div className='bottom' style={{ width: "100%", marginTop: 12, height: 58, borderTop: "solid 2px #eee", display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
                             <div style={{ display: "flex", justifyContent: "flex-end" }}>
                                 {/* <Button style={{ backgroundColor: "#D7E2EB", fontWeight: 700 }}>Reset</Button> */}
+                                <div style={{ width: "100%", height: 50, color: "red" }}>
+                                    {time / 100}
+                                </div>
                                 <Button
                                     disabled={loading1}
                                     onClick={() => {
+                                        setTime(0);
                                         const code = editorRef.current.getValue();
                                         if (codeValidation(code) === true) {
                                             modal.warning(configError);
