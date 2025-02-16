@@ -72,22 +72,7 @@ export default function Home({ params }: Props) {
     // Submit Code 용 로딩
     const [loading1, setLoading1] = useState(false);
 
-        // 타이머 모듈
-        const [time, setTime] = useState(0)
 
-        useEffect(() => {
-            let interval: any
-            if (loading1) {
-                interval = setInterval(() => {
-                    setTime((prevTime) => prevTime + 1)
-                }, 10)
-            } else {
-                clearInterval(interval)
-            }
-    
-            return () => clearInterval(interval)
-        }, [loading1])
-        // ... 타이머 모듈
 
     // // Submit 3초 이내 잦은 실행 방지
     // const [countdown, setCountdown] = useState<number | null>(null);
@@ -107,6 +92,22 @@ export default function Home({ params }: Props) {
 
     // Code Tutor 용 로딩
     const [loading2, setLoading2] = useState(false);
+        // 타이머 모듈
+        const [time, setTime] = useState(0)
+
+        useEffect(() => {
+            let interval: any
+            if (loading1 || loading2) {
+                interval = setInterval(() => {
+                    setTime((prevTime) => prevTime + 1)
+                }, 10)
+            } else {
+                clearInterval(interval)
+            }
+    
+            return () => clearInterval(interval)
+        }, [loading1, loading2])
+        // ... 타이머 모듈
 
     // 문제 세부사항 가져오기
     const [problemDetail, setProblemDetail] = useState<problemDetailType>();
@@ -753,6 +754,7 @@ export default function Home({ params }: Props) {
                                 <Button type="primary" style={{ marginLeft: 6, marginRight: 18, fontWeight: 700 }}
                                     disabled={loading2}
                                     onClick={() => {
+                                        setTime(0);
                                         const code = editorRef.current.getValue();
                                         if (codeValidation(code) === true) {
                                             modal.warning(configError);
