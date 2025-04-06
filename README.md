@@ -7,7 +7,10 @@ This repository contains the source code for the **GPT-based code review system*
 This project proposes a GPT-based code review system to assist students in learning programming more effectively. The system introduces two key components: the **Code Review Module(CCM)** and the **Code Correctness Check Module(CRM)**.
 
 - **CRM**: enhances the feedback process by first determining whether a review is necessary through the Review Necessity Chain (RNC). If required, the system proceeds to the Strict Code Check Chain (SCC), which performs deeper analysis even after test cases pass. It detects subtle issues such as unnecessary code, unmet requirements, hard coding, and computation errors. This layered approach ensures that only meaningful and accurate feedback is generated, minimizing unnecessary reviews and improving efficiency.
+![CRM](https://codetutorbot.blob.core.windows.net/image/2-2.png)
+  
 - **CRM**: to rduce unnecessary token usage and associated costs, the system introduces the Review Necessity Chain (RNC), which filters out overly simple or meaningless code that does not warrant a review, such as print() or basic input statements. The RNC assesses whether a review is needed by analyzing the correctness and relevance of the submission. If a review is required, the Review Generation Chain (RGC) then produces feedback by highlighting problematic lines and providing appropriate comments..
+![CCM](https://codetutorbot.blob.core.windows.net/image/2-3.png)
 
 ## 🎯 Key Features
 
