@@ -26,9 +26,6 @@ This project proposes a GPT-based code review system to assist students in learn
 - **Azure** (for deployment)
 
 ## 🗂️ System Modules
-
-```text
-.
 ├── api/                        
 ├──── codeFeedback/route.ts   # CRM (Review Necessity Chain & Review Comment Generation Chain)
 ├──── codeExecution/route.ts   # Code Correctness Check Module (Answer Check Component)
