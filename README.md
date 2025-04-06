@@ -25,10 +25,14 @@ This project proposes a GPT-based code review system to assist students in learn
 - **MongoDB** for data logging
 - **Azure** (for deployment)
 
+```markdown
 ## 🗂️ System Modules
+
+```text
+.
 ├── api/                        
-├──── codeFeedback/route.ts   # CRM (Review Necessity Chain & Review Comment Generation Chain)
-├──── codeExecution/route.ts   # Code Correctness Check Module (Answer Check Component)
+├──── codeFeedback/route.ts     # CRM (Review Necessity Chain & Review Comment Generation Chain)
+├──── codeExecution/route.ts    # Code Correctness Check Module (Answer Check Component)
 ├──── codeRigidCheck/route.ts   # Code Correctness Check Module (Strict Code Check Chain)
 
 
