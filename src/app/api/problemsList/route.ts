@@ -53,5 +53,6 @@ export async function POST(request: Request) {
 
 
   // `await`를 사용하여 `run` 함수의 반환 값을 기다립니다.
+  // test
   return await run()
 }
